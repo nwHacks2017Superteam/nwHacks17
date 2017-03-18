@@ -45,6 +45,15 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+io.on('connection', function(socket) {
+    console.log('a user connected');
+    var uuid = uuid.v4()
+
+    io.emit('give_session', { 'id': uuid });
+    // TODO -- spin up cockroach cluster (should it be here?)
+    // TODO -- associate cockroach cluster with uuid (global hashtable? json file?)
+});
+
 module.exports = app;
 
 server.listen(3000);
