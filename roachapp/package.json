@@ -11,17 +11,18 @@
     "debug": "~2.6.0",
     "ejs": "~2.5.5",
     "express": "~4.14.1",
-    "morgan": "~1.7.0",
-    "serve-favicon": "~2.3.2",
     "gulp": "latest",
-    "gulp-sass": "latest",
-    "gulp-concat": "latest",
-    "gulp-sourcemaps": "latest",
+    "gulp-autoprefixer": "latest",
     "gulp-browserify": "latest",
     "gulp-buble": "latest",
+    "gulp-concat": "latest",
     "gulp-cssmin": "latest",
+    "gulp-header": "latest",
+    "gulp-sass": "latest",
+    "gulp-sourcemaps": "latest",
     "gulp-uglify": "latest",
-    "gulp-autoprefixer": "latest",
-    "gulp-header": "latest"
+    "morgan": "~1.7.0",
+    "serve-favicon": "~2.3.2",
+    "socket.io": "^1.7.3"
   }
 }
