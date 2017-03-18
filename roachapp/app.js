@@ -13,6 +13,9 @@ var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var uuidV4 = require('uuid/v4');
 
+sessions = {};
+sessions.asdf = 'asdf';
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -49,12 +52,21 @@ app.use(function(err, req, res, next) {
 io.on('connection', function(socket) {
     var uuid = uuidV4();
     console.log(`a user connected, with ${uuid}`);
+    if (!sessions[uuid]) {
+        console.log('space available!');
+        sessions[uuid] = [];
+    }
 
     io.emit('give_session', { 'id': uuid });
+
+    io.on('kill_cockroach', function(msg) {
+        // TODO -- call script to violently murder a cockroachDB instance
+    });
     // TODO -- spin up cockroach cluster (should it be here?)
     // TODO -- associate cockroach cluster with uuid (global hashtable? json file?)
 });
 
 module.exports = app;
 
+console.log(JSON.stringify(sessions));
 server.listen(3000);
