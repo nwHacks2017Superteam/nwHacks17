@@ -12,6 +12,16 @@
     "ejs": "~2.5.5",
     "express": "~4.14.1",
     "morgan": "~1.7.0",
-    "serve-favicon": "~2.3.2"
+    "serve-favicon": "~2.3.2",
+    "gulp": "latest",
+    "gulp-sass": "latest",
+    "gulp-concat": "latest",
+    "gulp-sourcemaps": "latest",
+    "gulp-browserify": "latest",
+    "gulp-buble": "latest",
+    "gulp-cssmin": "latest",
+    "gulp-uglify": "latest",
+    "gulp-autoprefixer": "latest",
+    "gulp-header": "latest"
   }
 }
