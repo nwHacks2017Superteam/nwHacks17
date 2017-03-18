@@ -5,5 +5,4 @@ Running and installing:
 * go to `roachapp` directory
 * run `npm install` for dependencies
 * run `npm run` to create the file `bin/www`
-* run `node bin/www`
-* the app should be running at `http://localhost:3000`
+* run `node app.js` -- the app should be running on ![localhost:3000](http://localhost:3000/)
