@@ -1,9 +1,9 @@
 # SQUASH ALL THE ROACHES
 
 ## Required programs
-- netcat (so that the bash scripts can check if a port is open)
-=======
-Running and installing:
+- net-tools
+
+##Running and installing:
 
 * go to `roachapp` directory
 * run `npm install` for dependencies
