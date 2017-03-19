@@ -177,7 +177,6 @@ function add_trail(x, y, dx, dy, color_str) {
     shape.y = y;
 
     stage.addChild(shape);
-    console.log("added child");
     roach_trails.push({
         display_object: shape,
         lifetime: 0

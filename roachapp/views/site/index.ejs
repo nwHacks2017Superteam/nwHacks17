@@ -22,113 +22,113 @@
         });
     </script>
 
-    <script src="game.js"></script>
+    <script src="https://code.createjs.com/createjs-2015.11.26.min.js"></script>
+    <script src="scripts/game.js"></script>
 
 
 
 </head>
+<body onload="init();">
+    <div class="mdl-layout__container">
 
-<div class="mdl-layout__container">
+        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
 
-    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-
-        <header class="mdl-layout__header mdl-layout__header--scroll">
-            <div class="mdl-layout__header-row">
-                <!-- Title -->
-                <span class="mdl-layout-title">Food planning app.</span>
-                <!-- Add spacer, to align navigation to the right -->
-                <div class="mdl-layout-spacer"></div>
-                <!-- Navigation -->
-            </div>
-        </header>
-
-        <div class="mdl-layout__drawer">
-            <span class="mdl-layout__title">Material Design Lite</span>
-            <nav class="mdl-navigation">
-                <a class="mdl-navigation__link" href="#">Hello</a>
-                <a class="mdl-navigation__link" href="#">World.</a>
-                <a class="mdl-navigation__link" href="#">How</a>
-                <a class="mdl-navigation__link" href="#">Are</a>
-                <a class="mdl-navigation__link" href="#">You?</a>
-            </nav>
-        </div>
-
-        <main class="mdl-layout__content">
-
-            <div class="mdl-grid">
-
-
-                <!-- Debug card -->
-                <div class="mdl-cell mdl-cell--2-col">
-                    <div class="demo-card-wide mdl-card mdl-shadow--2dp fill-width side-menu m-auto">
-                        <div class="mdl-card__title">
-                            <h2 class="mdl-card__title-text">Debug Window</h2>
-                        </div>
-                        <div class="mdl-card__supporting-text">
-                            Sample output.
-                            Sample output.
-                            Sample output.
-                            Sample output.
-                            Sample output.
-                            Sample output.
-                            Sample output.
-                            Sample output.
-                        </div>
-
-                        <div class="mdl-card__menu">
-                            <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
-                                <i class="material-icons">share</i>
-                            </button>
-                        </div>
-                    </div>
+            <header class="mdl-layout__header mdl-layout__header--scroll">
+                <div class="mdl-layout__header-row">
+                    <!-- Title -->
+                    <span class="mdl-layout-title">Food planning app.</span>
+                    <!-- Add spacer, to align navigation to the right -->
+                    <div class="mdl-layout-spacer"></div>
+                    <!-- Navigation -->
                 </div>
+            </header>
+
+            <div class="mdl-layout__drawer">
+                <span class="mdl-layout__title">Material Design Lite</span>
+                <nav class="mdl-navigation">
+                    <a class="mdl-navigation__link" href="#">Hello</a>
+                    <a class="mdl-navigation__link" href="#">World.</a>
+                    <a class="mdl-navigation__link" href="#">How</a>
+                    <a class="mdl-navigation__link" href="#">Are</a>
+                    <a class="mdl-navigation__link" href="#">You?</a>
+                </nav>
+            </div>
+
+            <main class="mdl-layout__content">
+
+                <div class="mdl-grid">
 
 
-                <!-- Game window card & debug -->
-                <div class="mdl-cell--10-col">
-
-                    <!-- debug menu -->
-
-                    <div class="mdl-cell fill-width">
-
-                        <div class="demo-card-wide mdl-card mdl-shadow--2dp fill-width m-auto debug-menu">
+                    <!-- Debug card -->
+                    <div class="mdl-cell mdl-cell--2-col">
+                        <div class="demo-card-wide mdl-card mdl-shadow--2dp fill-width side-menu m-auto">
                             <div class="mdl-card__title">
-                                <h2 class="mdl-card__title-text">Welcome</h2>
+                                <h2 class="mdl-card__title-text">Debug Window</h2>
                             </div>
                             <div class="mdl-card__supporting-text">
-                                Debug Menu.
+                                Sample output.
+                                Sample output.
+                                Sample output.
+                                Sample output.
+                                Sample output.
+                                Sample output.
+                                Sample output.
+                                Sample output.
                             </div>
+
                             <div class="mdl-card__menu">
                                 <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
                                     <i class="material-icons">share</i>
                                 </button>
                             </div>
                         </div>
-
                     </div>
 
-                    <!-- game window -->
 
-                    <div class="mdl-cell fill-width">
+                    <!-- Game window card & debug -->
+                    <div class="mdl-cell--10-col">
 
-                        <div class="demo-card-wide mdl-card mdl-shadow--2dp fill-width game-window m-auto debug-menu">
-                            <div class="mdl-card__media">
+                        <!-- debug menu -->
 
-                                <canvas id="gameCanvas" class="fill-height">
+                        <div class="mdl-cell fill-width">
 
-                                    <!-- Alex here is your canvas space -->
+                            <div class="demo-card-wide mdl-card mdl-shadow--2dp fill-width m-auto debug-menu">
+                                <div class="mdl-card__title">
+                                    <h2 class="mdl-card__title-text">Welcome</h2>
+                                </div>
+                                <div class="mdl-card__supporting-text">
+                                    Debug Menu.
+                                </div>
+                                <div class="mdl-card__menu">
+                                    <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+                                        <i class="material-icons">share</i>
+                                    </button>
+                                </div>
+                            </div>
 
-                                </canvas>
+                        </div>
 
+                        <!-- game window -->
+
+                        <div class="mdl-cell fill-width">
+
+                            <div class="demo-card-wide mdl-card mdl-shadow--2dp fill-width game-window m-auto debug-menu">
+                                <div class="mdl-card__media">
+                                    <canvas id="gameCanvas" width=1000 height=700 class="fill-height" >
+
+                                        <!-- Alex here is your canvas space -->
+
+                                    </canvas>
+                                </div>
                             </div>
                         </div>
+
+
                     </div>
 
-
                 </div>
+            </main>
 
-            </div>
-        </main>
-
+        </div>
     </div>
-</div>
+</body>
