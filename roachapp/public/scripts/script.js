@@ -82,12 +82,16 @@ socket.on('console_log', function (data) {
 
 function setGameWindowDimensions(){
 
-    console.log("RESIZING DIS BITCH);
+    console.log("RESIZING DIS BITCH");
 
     var width = document.getElementById("gameCanvasContainer").offsetWidth;
     var height = document.getElementById("gameCanvasContainer").offsetHeight;
     console.log("Width: " + width);
     console.log("Height: " + height);
+
+    var canvas = document.getElementById("gameCanvas");
+    canvas.width = width;
+    canvas.height = height;
 
     set_size(width, height);
 }

@@ -13,15 +13,8 @@
     <script src="/socket.io/socket.io.js"></script>
 
 
-    <script src="scripts/script.js">console.log("yo");</script>
-    <script>
-        //Start the client-server connection.
-        onClientLoad();
-    </script>
-
     <script src="https://code.createjs.com/createjs-2015.11.26.min.js"></script>
     <script src="scripts/game.js"></script>
-
 
 
 </head>
@@ -111,7 +104,7 @@
 
                             <div class="demo-card-wide mdl-card mdl-shadow--2dp fill-width game-window m-auto debug-menu">
                                 <div id="gameCanvasContainer" class="mdl-card__media fill-width">
-                                    <canvas id="gameCanvas" width=1000 height=700 class="fill-height" >
+                                    <canvas id="gameCanvas"  class="fill-height fill-width" >
 
                                         <!-- Alex here is your canvas space -->
 
@@ -129,3 +122,11 @@
         </div>
     </div>
 </body>
+
+<footer>
+    <script src="scripts/script.js">console.log("yo");</script>
+    <script>
+        //Start the client-server connection.
+        onClientLoad();
+    </script>
+</footer>
