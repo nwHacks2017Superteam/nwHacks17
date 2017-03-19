@@ -2,22 +2,19 @@
 
 # Starts up a cockroach instance
 
-masterInstanceAddress='' # The address of the master instance to connect to
-
-# Flags
-# "-m" the address of an instance in the cluster you want to join
+masterInstancePort='' # The address of the master instance to connect to
 
 # Get Flags 
-while getopts 'm:' flag; do
+while getopts 'p:' flag; do
     case "${flag}" in
-        m) masterInstanceAddress="${OPTARG}" ;;
+        p) masterInstancePort="${OPTARG}" ;;
         *) error "Unexpected option ${flag}" ;;
     esac
 done
-
-if [ -z "$masterInstanceAddress" ]; then 
-    cockroach start --background --port=0 --http-port=0 --store=node$RANDOM
-else
-    cockroach start --background --port=0 --http-port=0 --store=node$RANDOM --join=$masterInstanceAddress 
+if [ "$masterInstancePort" == "" ]; then
+    echo "ERROR: must provide address of cluster to join via the \"-p\" flag"
+    exit 1
 fi
+
+cockroach start --background --port=0 --http-port=0 --store=node$RANDOM --join=localhost:$masterInstancePort 
 
