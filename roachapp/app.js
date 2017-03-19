@@ -73,7 +73,7 @@ io.on('connection', function(socket) {
             sessions[socket]['http_port'] = fields[2];
             checkAPI(sessions[socket]['http_port']);
             //console.log(`http://localhost:${sessions[socket]['http_port']}/#/cluster/nodes`);
-            io.emit('give_session', { 'id': uuid, 'roach_ids': sessions[socket]['pids'], 'admin_interface_url': `localhost:${sessions[socket]['http_port']}/#/cluster/nodes` });
+            io.emit('give_session', { 'id': uuid, 'roach_ids': sessions[socket]['pids'], 'admin_interface_url': `http://localhost:${sessions[socket]['http_port']}/#/cluster/nodes` });
         } else if (fields.length == 1) {
 
             if (!(`${parseInt(data)}` == "NaN")) {
