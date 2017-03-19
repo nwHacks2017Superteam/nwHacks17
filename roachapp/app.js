@@ -14,7 +14,6 @@ var io = require('socket.io')(server);
 var uuidV4 = require('uuid/v4');
 
 sessions = {};
-sessions.asdf = 'asdf';
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -70,7 +69,8 @@ io.on('connection', function(socket) {
     io.emit('give_session', { 'id': uuid });
 
     socket.on('kill_cockroach', function(msg) {
-        // TODO -- call script to violently murder a cockroachDB instance
+        process.kill(msg['pid'], 'SIGKILL');
+        // TODO -- add some security checking to see if the process to be killed belongs to your session
     });
 
     socket.on('disconnect', function() {
