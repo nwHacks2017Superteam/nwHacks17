@@ -87,11 +87,9 @@ io.on('connection', function(socket) {
     function checkAPI(port) {
         request(`http://localhost:${port}/_status/nodes`, function (error, response, body) {
             var JSONbody = JSON.parse(body);
-            //console.log(JSON.stringify(JSONbody));
-
-            //var draining = JSONbody['livenesses'].filter(instance => instance['draining']).length;
 
             var nodes = JSONbody.nodes;
+            console.log(nodes);
 
             var allBig = nodes.every(function(node) {
                 node.storeStatuses[0].metrics.replicas >= 10;
@@ -114,7 +112,7 @@ io.on('connection', function(socket) {
         });
     }
 
-
+    io.emit('give_session', { 'id': uuid, 'roach_ids': sessions[socket]['pids'], 'admin_interface_url': `http://localhost:${sessions[socket]['http_port']}/#/cluster/nodes` });
 
     socket.on('kill_cockroach', function(msg) {
         process.kill(msg['pid'], 'SIGKILL');
