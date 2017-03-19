@@ -2,6 +2,8 @@ var stage;
 
 var score = new createjs.Text("0", "20px Arial", "#ff7700");
 
+var game_over=false;
+
 var player = new createjs.Container();
 var player_hurt_radius = 22;
 
@@ -132,6 +134,11 @@ function update_mouse(mouse_event) {
 }
 
 function update(event) {
+
+    if (game_over){
+        return;
+    }
+    
     //seconds 
     let delta_time = event.delta / 1000;
 
@@ -198,6 +205,7 @@ function update(event) {
         )) {
             //kill player
             console.log("player hit!");
+            game_over=true;
 
             end_game();
 
@@ -346,7 +354,7 @@ function spawn_roach(spawn) {
 }
 
 function killall() {
-    for (i = roaches.length; i >= 0; i--) {
+    for (i = roaches.length-1; i >= 0; i--) {
         kill_roach(roach[i]);
     }
 }
