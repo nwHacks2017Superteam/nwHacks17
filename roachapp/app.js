@@ -53,10 +53,6 @@ io.on('connection', function(socket) {
     var uuid = uuidV4();
     console.log(`a user connected, with ${uuid}`);
 
-    child_process.execFile('./bash-scripts/start-cluster.sh', ['-n', '20'], (error, stdout, stderr) => {
-        console.log(`stdout: ${stdout}`);
-    });
-
     if (!sessions[socket]) {
         sessions[socket] = {
             'uuid': uuid,
@@ -64,6 +60,12 @@ io.on('connection', function(socket) {
         };
     }
 
+    var childproc = child_process.spawn('bash-scripts/start-cluster.sh', ['-n', '20']);
+
+    childproc.stdout.on('data', (data) => {
+        sessions[socket]['pids'].push(`${parseInt(data)}`);
+        console.log(JSON.stringify(sessions[socket]['pids']));
+    });
 
     io.emit('give_session', { 'id': uuid });
 
@@ -72,6 +74,13 @@ io.on('connection', function(socket) {
     });
 
     socket.on('disconnect', function() {
+        console.log(JSON.stringify(sessions[socket]))
+        childproc.kill();
+        for (i in sessions[socket]['pids']) {
+            console.log(sessions[socket]['pids'][i]);
+            process.kill(sessions[socket]['pids'][i], 'SIGKILL');
+            //child_process.exec(`kill ${sessions[socket]['pids'][i]}`);
+        }
         // TODO -- add graceful shutdown of all nodes in the cluster associated with the session
     });
     // TODO -- spin up cockroach cluster (should it be here?)
