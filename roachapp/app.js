@@ -67,7 +67,18 @@ io.on('connection', function(socket) {
     });
     // TODO -- spin up cockroach cluster (should it be here?)
     // TODO -- associate cockroach cluster with uuid (global hashtable? json file?)
+
+    socket.on('request_message', function(msg){
+        console.log('Message received');
+        sendConsoleLogs(msg);
+    });
+
 });
+
+function sendConsoleLogs(msg){
+    console.log('Sending message to client');
+    io.emit('console_log', {message: msg});
+}
 
 module.exports = app;
 
