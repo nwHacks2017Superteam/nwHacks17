@@ -13,20 +13,18 @@ var session_id;
 var cockroaches = [];
 
 
-
-
-
-
 //Called on cockroch destroyed
-function destroyRoach(roach){
-
-    var message = {session_id: session_id, roach_id: roach}
+function destroyRoach(roachID){
+    var message = {'pid': roachID}
     socket.emit('kill_cockroach', message);
+
+    cockroaches.filter(function(item){
+        return item.id !== roachID;
+    });
 }
 
 
 function logServerConsoleToScreen(message){
-
     var div = document.createElement('div');
     input = message.message;
     div.className = 'mdl-list__item scrolling-list-element';
@@ -34,7 +32,6 @@ function logServerConsoleToScreen(message){
         input
         + '</span>';
     document.getElementById('console-list').appendChild(div);
-
 }
 
 
@@ -58,19 +55,27 @@ function onClientLoad(){
 function createRoach(newRoachID){
     var returnRoach = {id: newRoachID}
     cockroaches.push(returnRoach);
+
+    //Create cockroach in game.
+    createCockroach(returnRoach.id);
 }
 
 //Testing round trip to server and back
 function requestLog(msg){
     console.log('sending message to server');
-    socket.emit('request_message', {message: msg});
+    socket.emit('request_message', {'message': msg});
 }
 
 
+
+
+//SOCKET ONs
+
 //Receive cockroach from server.
-socket.on('create_roach', function(data) {
-    console.log('Creating cockroach with id: ' + data.rid);
-    createRoach(data.id);
+socket.on('new_roach', function(data) {
+
+    console.log('Creating cockroach with id: ' + data.roach_id);
+    createRoach(data.roach_id);
 });
 
 socket.on('console_log', function (data) {
@@ -79,7 +84,14 @@ socket.on('console_log', function (data) {
 });
 
 
+socket.on('liveness_update', function (data) {
+    console.log('Server says: ' + data.body)
+    logServerConsoleToScreen(data.body);
+})
 
+
+
+//Setting game window sizes.
 function setGameWindowDimensions(){
 
     console.log("RESIZING DIS BITCH");
@@ -102,3 +114,21 @@ window.onresize = function(event) {
 };
 
 setGameWindowDimensions();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

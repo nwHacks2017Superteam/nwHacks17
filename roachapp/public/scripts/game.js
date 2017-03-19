@@ -296,8 +296,7 @@ function spawn_roach(spawn) {
 
 function kill_roach(roach) {
     //TODO: add gibbing
-    //TODO: kill database
-    //destroyRoach(roach.id);
+    destroyRoach(roach.id);
     roach_layer.removeChild(roach.display_object);
     for(i = 0; i < roaches.length; i++) {
         if(roaches[i] === roach) {
@@ -305,6 +304,9 @@ function kill_roach(roach) {
             break;
         }
     }
+
+
+
 }
 
 function construct_blue_roach(id) {
