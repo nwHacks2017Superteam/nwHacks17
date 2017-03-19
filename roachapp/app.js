@@ -62,8 +62,8 @@ io.on('connection', function(socket) {
         // TODO -- call script to violently murder a cockroachDB instance
     });
 
-    socket.on('disconnect', function(socket) {
-
+    socket.on('disconnect', function(msg) {
+        // TODO -- add graceful shutdown of all nodes in the cluster associated with the session
     });
     // TODO -- spin up cockroach cluster (should it be here?)
     // TODO -- associate cockroach cluster with uuid (global hashtable? json file?)
