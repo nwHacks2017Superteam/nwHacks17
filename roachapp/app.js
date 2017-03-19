@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var child_process = require('child_process');
 
 var index = require('./routes/index');
 
@@ -13,7 +14,6 @@ var io = require('socket.io')(server);
 var uuidV4 = require('uuid/v4');
 
 sessions = {};
-sessions.asdf = 'asdf';
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -51,28 +51,37 @@ app.use(function(err, req, res, next) {
 io.on('connection', function(socket) {
     var uuid = uuidV4();
     console.log(`a user connected, with ${uuid}`);
-    if (!sessions[uuid]) {
-        // console.log('space available!');
-        sessions[uuid] = [];
+
+    if (!sessions[socket]) {
+        sessions[socket] = {
+            'uuid': uuid,
+            'pids': [] // populate with pids
+        };
     }
+
+    var childproc = child_process.spawn('bash-scripts/start-cluster.sh', ['-n', '10', '-u', uuid]);
+
+    childproc.stdout.on('data', (data) => {
+        console.log(`${data}`);
+        if (!(`${parseInt(data)}` == "NaN")) {
+            sessions[socket]['pids'].push(`${parseInt(data)}`);
+            console.log(JSON.stringify(sessions[socket]['pids']));
+        }
+    });
 
     io.emit('give_session', { 'id': uuid });
 
     socket.on('kill_cockroach', function(msg) {
-        // TODO -- call script to violently murder a cockroachDB instance
+        process.kill(msg['pid'], 'SIGKILL');
+        // TODO -- add some security checking to see if the process to be killed belongs to your session
     });
 
-    socket.on('disconnect', function(msg) {
-        // TODO -- add graceful shutdown of all nodes in the cluster associated with the session
+    socket.on('disconnect', function() {
+        childproc.kill();
+        for (i in sessions[socket]['pids']) {
+            process.kill(sessions[socket]['pids'][i], 'SIGKILL');
+        }
     });
-    // TODO -- spin up cockroach cluster (should it be here?)
-    // TODO -- associate cockroach cluster with uuid (global hashtable? json file?)
-
-    socket.on('request_message', function(msg){
-        console.log('Message received');
-        sendConsoleLogs(msg);
-    });
-
 });
 
 function sendConsoleLogs(msg){
