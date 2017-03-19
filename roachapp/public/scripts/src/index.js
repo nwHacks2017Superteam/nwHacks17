@@ -6,8 +6,6 @@
 var socket = io();
 
 
-
-
 //Session id for the game.
 var session_id;
 
@@ -15,27 +13,15 @@ var session_id;
 var cockroaches = [];
 
 
-//API//
 
-//Called when the window is loaded.
-function onClientLoad(){
-
-    console.log(socket);
-
-    socket.on('give_session', function(msg) {
-        console.log(JSON.stringify(msg));
-        session_id = msg.id;
-    });
-
-}
 
 
 
 //Called on cockroch destroyed
-function onObjectDestroy(roach){
+function destroyRoach(roach){
 
-    var message = {session_id: session_id, roach_id: roach.id}
-    socket.emit('destroy_cockroach', message);
+    var message = {session_id: session_id, roach_id: roach}
+    socket.emit('kill_cockroach', message);
 }
 
 
@@ -52,11 +38,25 @@ function logServerConsoleToScreen(message){
 }
 
 
+
+
 //Helper Functions//
+
+
+//Called when the window is loaded.
+function onClientLoad(){
+
+    console.log(socket);
+
+    socket.on('give_session', function(msg) {
+        console.log(JSON.stringify(msg));
+        session_id = msg.id;
+    });
+
+}
 
 //When new cockroach is created, create the new cockroach object and add it to the list.
 function createRoach(newRoachID){
-
     var returnRoach = {id: newRoachID}
     cockroaches.push(returnRoach);
 }
@@ -69,8 +69,8 @@ function requestLog(msg){
 
 
 //Receive cockroach from server.
-socket.on('roach_to_client', function(data) {
-    console.log('Creating cockroach with id: ' + data.id);
+socket.on('create_roach', function(data) {
+    console.log('Creating cockroach with id: ' + data.rid);
     createRoach(data.id);
 });
 
