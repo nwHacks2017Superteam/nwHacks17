@@ -35,6 +35,9 @@ function getFreePort ()
     ss -tln | awk 'NR > 1{gsub(/.*:/,"",$4); print $4}' | sort -un | awk -v n=12000 '$0 < n {next}; $0 == n {n++; next}; {exit}; END {print n}'
 }
 
+# Change to /tmp so we dont clutter up the project directory
+cd /tmp
+
 # Start the main db instance and save the port it's running on
 mainPort=$(getFreePort)
 cockroach start --background --port=$mainPort --http-port=0 --store=node$RANDOM > /dev/null
