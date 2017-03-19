@@ -198,6 +198,9 @@ function update(event) {
         )) {
             //kill player
             console.log("player hit!");
+
+            end_game();
+
         }
         if(within_circle(
             roaches[i].display_object.x,

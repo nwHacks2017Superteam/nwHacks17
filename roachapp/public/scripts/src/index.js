@@ -145,6 +145,15 @@ function setiframecontent(){
     //canvas.contentWindow.location.reload();
 }
 
+
+function end_game(){
+    document.getElementById("site-title").innerHTML = "Game Over!";
+    document.getElementById("site-title").style = "color: red";
+
+}
+
+
+
 setiframecontent();
 setGameWindowDimensions();
 

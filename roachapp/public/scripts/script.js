@@ -198,6 +198,9 @@ function update(event) {
         )) {
             //kill player
             console.log("player hit!");
+
+            end_game();
+
         }
         if(within_circle(
             roaches[i].display_object.x,
@@ -761,6 +764,15 @@ function setiframecontent(){
     canvas.setAttribute('src',admin_url);
     //canvas.contentWindow.location.reload();
 }
+
+
+function end_game(){
+    document.getElementById("site-title").innerHTML = "Game Over!";
+    document.getElementById("site-title").style = "color: red";
+
+}
+
+
 
 setiframecontent();
 setGameWindowDimensions();
