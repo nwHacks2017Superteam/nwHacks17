@@ -1,0 +1,7 @@
+range_min_bytes: 0
+range_max_bytes: 65536
+gc:
+  ttlseconds: 86400
+num_replicas: 50
+constraints: []
+
