@@ -139,9 +139,10 @@ window.onresize = function(event) {
 };
 
 function setiframecontent(){
+    console.log(admin_url);
     var canvas = document.getElementById("admin-window");
-    canvas.src = admin_url;
-    canvas.contentWindow.location.reload();
+    canvas.setAttribute('src',admin_url);
+    //canvas.contentWindow.location.reload();
 }
 
 setiframecontent();
