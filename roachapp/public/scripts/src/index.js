@@ -39,7 +39,6 @@ function logServerConsoleToScreen(message){
 
 
 
-
 //Helper Functions//
 
 
@@ -78,3 +77,24 @@ socket.on('console_log', function (data) {
     console.log('Server says: ' + data.message)
     logServerConsoleToScreen(data.message);
 });
+
+
+
+function setGameWindowDimensions(){
+
+    console.log("RESIZING DIS BITCH);
+
+    var width = document.getElementById("gameCanvasContainer").offsetWidth;
+    var height = document.getElementById("gameCanvasContainer").offsetHeight;
+    console.log("Width: " + width);
+    console.log("Height: " + height);
+
+    set_size(width, height);
+}
+
+//Handle window resizes by triggering the game window to resize.
+window.onresize = function(event) {
+    setGameWindowDimensions();
+};
+
+setGameWindowDimensions();
