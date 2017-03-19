@@ -17,8 +17,8 @@ var trail_duration = 3;
 
 var attacks = [];
 var attack_layer = new createjs.Container();
-var hit_radius = 100;
-var attack_duration = 2;
+var hit_radius = 120;
+var attack_duration = 1.8;
 
 var spawns = [];
 var spawn_layer = new createjs.Container();

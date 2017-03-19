@@ -495,10 +495,12 @@ function update_blue_roach(roach, delta_time) {
 
     if(roach.display_object.x > width || roach.display_object.x < 0) {
         roach.direction.x *= -1;
+        roach.display_object.x = roach.display_object.x > width ? width : 0;
     }
 
     if(roach.display_object.y > height || roach.display_object.y < top_bar_height) {
         roach.direction.y *= -1;
+        roach.display_object.y = roach.display_object.y > height ? height : top_bar_height;
     }
 
     let angle = Math.atan(roach.direction.y/roach.direction.x) * 180 / Math.PI;
