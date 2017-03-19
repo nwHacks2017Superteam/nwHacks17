@@ -15,10 +15,13 @@ var trail_duration = 3;
 
 var attacks = [];
 var attack_layer = new createjs.Container();
-var hit_radius = 80;
-var attack_duration = 2;
+var hit_radius = 100;
+var attack_duration = 2.5;
 
-
+var spawns = [];
+var spawn_layer = new createjs.Container();
+var spawn_duration = 2;
+var spawn_radius = 20;
 
 
 let width, height;
@@ -77,13 +80,15 @@ function init() {
 
     stage.addChild(background);
     stage.addChild(trail_layer);
+    stage.addChild(spawn_layer);
     stage.addChild(attack_layer);
     stage.addChild(player);
     stage.addChild(roach_layer);
 
     stage.addEventListener("stagemousemove", update_mouse, false); 
 
-    spawn_roach(construct_blue_roach());
+    //spawn_roach(construct_blue_roach());
+    spawn_roach_wave(3);
 
     createjs.Ticker.addEventListener("tick", update);
     createjs.Ticker.setFPS(30);
@@ -100,12 +105,22 @@ function update(event) {
 
     trail_accumulator += delta_time;
 
+    //update spawns
+    for (let i = spawns.length-1; i >= 0; i--) {
+        spawns[i].lifetime += delta_time;
+        if(spawns[i].lifetime >= spawn_duration) {
+            spawn_roach(spawns[i]);
+            spawns.splice(i,1);
+            continue;
+        }
+        spawns[i].inner_display_object.scaleX = spawns[i].lifetime / spawn_duration * spawn_radius;
+        spawns[i].inner_display_object.scaleY = spawns[i].lifetime / spawn_duration * spawn_radius;
+    }
 
     //update roaches
-    for (i in roaches) {
+    for (let i = 0; i < roaches.length; i++ ) {
         update_roach(roaches[i], delta_time);
-        while(trail_accumulator > trail_interval) {
-            trail_accumulator -= trail_interval;
+        if(trail_accumulator > trail_interval) {
             add_trail(
                 roaches[i].display_object.x,
                 roaches[i].display_object.y,
@@ -134,10 +149,10 @@ function update(event) {
         )) {
             //add new attack
             let attack_exists = false;
-            for (i in attacks) {
-                if(attacks[i].roach === roaches[i]) {
+            for (let j = 0; j < attacks.length; j++) {
+                if(attacks[j].roach.id == roaches[i].id) {
                     attack_exists = true;
-                    break;
+                    continue;
                 }
             }
 
@@ -148,8 +163,12 @@ function update(event) {
 
     }
 
+    if(trail_accumulator > trail_interval){
+            trail_accumulator -= trail_interval;
+    }
+
     //update roach trails
-    for (i = roach_trails.length - 1; i >= 0; i--) {
+    for (let i = roach_trails.length - 1; i >= 0; i--) {
         roach_trails[i].lifetime += delta_time;
         roach_trails[i].display_object.alpha = 1 - roach_trails[i].lifetime / trail_duration;
         if(roach_trails[i].lifetime > trail_duration) {
@@ -158,12 +177,12 @@ function update(event) {
     }
 
     //update attacks
-    for (i = attacks.length - 1; i >= 0; i--) {
+    for (let i = attacks.length - 1; i >= 0; i--) {
         attacks[i].line_display_object.x = attacks[i].roach.display_object.x;
         attacks[i].line_display_object.y = attacks[i].roach.display_object.y;
         if(within_circle(
-            attacks[i].roach.display_object.x,
-            attacks[i].roach.display_object.y,
+            attacks[i].line_display_object.x,
+            attacks[i].line_display_object.y,
             player.x,
             player.y,
             hit_radius
@@ -171,11 +190,13 @@ function update(event) {
             attacks[i].lifetime += delta_time;
             if(attacks[i].lifetime >= attack_duration) {
                 attack_layer.removeChild(attacks[i].line_display_object);
+                kill_roach(attacks[i].roach);
                 attacks.splice(i,1);
-                console.log("killed roach!");
                 continue;
             }
-            attacks[i].line_display_object.alpha = attacks[i].lifetime / attack_duration * 0.8 + 0.2;
+
+            let alpha_factor = attacks[i].lifetime / attack_duration;
+            attacks[i].line_display_object.alpha = Math.pow(alpha_factor, 3) * 0.8 + 0.2;
             aim_attack(attacks[i]);
         }
         else {
@@ -195,27 +216,91 @@ function update(event) {
     stage.update();
 }
 
-function spawn_roach(roach) {
-    //assumes the roach has been constructed
 
-    //TODO: assign the roach a random spawn position
-    roach.display_object.x = 20;
-    roach.display_object.y = 45;
+function spawn_roach_wave(count) {
+    let margin = 30;
 
-    roach_layer.addChild(roach.display_object);
+    for (i = 0; i < count; i++) {
+        let x = margin + Math.random() * (width - margin * 2);
+        let y = margin + Math.random() * (height - margin * 2);
+        let roach;
+        let color_rand = Math.random() * 3;
+        //TODO: spawn different color roaches
+        if(color_rand < 1) {
+            roach = construct_blue_roach();
+        }
+        else if(color_rand < 2) {
+            roach = construct_blue_roach();
+        }
+        else if(color_rand < 3) {
+            roach = construct_blue_roach();
+        }
+        roach.display_object.x = x;
+        roach.display_object.y = y;
+        create_spawn_point(roach);
+    }
+}
 
-    roaches.push(roach);
+function create_spawn_point(roach) {
+    let color = "#ffffff";
+    switch (roach.color) {
+        case "blue":
+            color = "#8080ff";
+            break;
+        case "green":
+            color = "#80ff80";
+    }
+    let circle1 = new createjs.Shape();
+    circle1.graphics.setStrokeStyle(2).beginStroke(color).drawCircle(0,0,spawn_radius);
+    circle1.x = roach.display_object.x;
+    circle1.y = roach.display_object.y;
+    let circle2 = new createjs.Shape();
+    circle2.graphics.beginFill(color).drawCircle(0,0,1);
+    circle2.x = roach.display_object.x;
+    circle2.y = roach.display_object.y;
+
+    let spawn = {
+        outer_display_object: circle1,
+        inner_display_object: circle2,
+        new_roach: roach,
+        lifetime: 0
+    }
+    spawn_layer.addChild(circle2);
+    spawn_layer.addChild(circle1);
+    spawns.push(spawn);
+}
+
+function spawn_roach(spawn) {
+
+    roach_layer.addChild(spawn.new_roach.display_object);
+    roaches.push(spawn.new_roach);
+
+    spawn_layer.removeChild(spawn.inner_display_object);
+    spawn_layer.removeChild(spawn.outer_display_object);
+}
+
+function kill_roach(roach) {
+    //TODO: add gibbing
+    //TODO: kill database
+    roach_layer.removeChild(roach.display_object);
+    for(i = 0; i < roaches.length; i++) {
+        if(roaches[i] === roach) {
+            roaches.splice(i, 1);
+            break;
+        }
+    }
 }
 
 function construct_blue_roach() {
     let roach_display = new createjs.Shape();
     roach_display.graphics.beginStroke("Black").beginFill("Blue").drawRect(-10, -10, 20, 20);
     return {
+        id: create_roach_id(),
         color: "blue",
         display_object: roach_display,
         direction: {
-            x: 1,
-            y: 1
+            x: Math.random() < 0.5 ? -1 : 1,
+            y: Math.random() < 0.5 ? -1 : 1
         }
     };
 }
@@ -327,6 +412,14 @@ function within_circle(x, y, circle_x, circle_y, radius) {
 
     return radius * radius >= dx2 + dy2;
 }
+
+let roach_count = 0;
+
+function create_roach_id() {
+    return roach_count++;
+}
+
+
 
 
 
