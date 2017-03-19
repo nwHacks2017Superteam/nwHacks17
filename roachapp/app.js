@@ -64,7 +64,7 @@ io.on('connection', function(socket) {
 
     socket.on('disconnect', function(socket) {
 
-    }
+    });
     // TODO -- spin up cockroach cluster (should it be here?)
     // TODO -- associate cockroach cluster with uuid (global hashtable? json file?)
 });
