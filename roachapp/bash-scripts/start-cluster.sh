@@ -2,21 +2,27 @@
 
 # Starts up a cockroach cluster
 
-NUM_SERVERS=-1 # The number of instances to create in the cluster
+NUM_SERVERS=-1  # The number of instances to create in the cluster
+UUID=""         # A unique id used to create the log file folder
 
 # Flags
 # "-n" the number of instances to create in the cluster
 
 # Get Flags 
-while getopts 'n:' flag; do
+while getopts 'n:u:' flag; do
     case "${flag}" in
         n) NUM_SERVERS="${OPTARG}" ;;
+        u) UUID="${OPTARG}" ;;
         *) error "Unexpected option ${flag}" ;;
     esac
 done
 
 if [ $NUM_SERVERS == -1 ]; then
     echo "ERROR: Must provide number of instances via the \"-n\" option"
+    exit 1
+fi
+if [ "$UUID" == "" ]; then
+    echo "ERROR: Must provide a uuid via the \"-u\" option"
     exit 1
 fi
 
@@ -30,7 +36,7 @@ cd /tmp
 
 # Start the main db instance and save the port it's running on
 mainPort=$(getFreePort)
-cockroach start --background --port=$mainPort --http-port=0 --store=node$RANDOM > /dev/null
+cockroach start --background --port=$mainPort --http-port=0 --store=node$RANDOM --log-dir=/tmp/roachapp-log-$UUID > /dev/null
 echo $(ps -fC cockroach | tail -1 | awk '{print $2}')
 
 # Start up however many db instances we asked for
@@ -43,7 +49,7 @@ do
     # Save the node id to the list of id's
     nodeNums+=($nodeNum)
     # Run up an instance with the given node id
-    cockroach start --background --port=0 --http-port=0 --store=node$nodeNum --join=localhost:$mainPort > /dev/null &
+    cockroach start --background --port=0 --http-port=0 --store=node$nodeNum --join=localhost:$mainPort --log-dir=/tmp/roachapp-log-$UUID > /dev/null &
     # Echo the pid of the just created process
     #echo $(ps -fC cockroach | tail -1 | awk '{print $2}')
 done
