@@ -39,13 +39,12 @@ function onObjectDestroy(roach){
 }
 
 
-
 function logServerConsoleToScreen(message){
 
-    var div = document.createElement('li');
+    var div = document.createElement('div');
     input = message.message;
-    div.className = 'mdl-list__item';
-    div.innerHTML = '<span class="mdl-list__item-primary-content"/>' +
+    div.className = 'mdl-list__item scrolling-list-element';
+    div.innerHTML = '<span class="mdl-list__item-primary-content"/>' + "$> " +
         input
         + '</span>';
     document.getElementById('console-list').appendChild(div);
@@ -62,6 +61,11 @@ function createRoach(newRoachID){
     cockroaches.push(returnRoach);
 }
 
+//Testing round trip to server and back
+function requestLog(msg){
+    console.log('sending message to server');
+    socket.emit('request_message', {message: msg});
+}
 
 
 //Receive cockroach from server.

@@ -51,7 +51,8 @@ gulp.task('uglify', function() {
 gulp.task('watch', function() {
     gulp.watch('public/styles/src/*.scss', ['sass']);
     gulp.watch('public/styles/dist/*.scss', ['sass']);
-    gulp.watch('public/scripts/*.js', ['js']);
+    gulp.watch('public/scripts/src/*.js', ['js']);
+    gulp.watch('public/scripts/dist/*.js', ['js']);
 });
 
 gulp.task('default', ['sass', 'js'], function() {
