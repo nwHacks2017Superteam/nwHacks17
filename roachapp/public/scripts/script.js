@@ -636,10 +636,10 @@ function logServerConsoleToScreen(message){
 
 //Called when the window is loaded.
 function onClientLoad(){
-    console.log(socket);
+    //console.log(socket);
 
     socket.on('give_session', function(msg) {
-        console.log(JSON.stringify(msg));
+        //console.log(JSON.stringify(msg));
         session_id = msg.id;
     });
 }
@@ -656,7 +656,7 @@ function createRoach(newRoachID){
 
 //Testing round trip to server and back
 function requestLog(msg){
-    console.log('sending message to server');
+    //console.log('sending message to server');
     socket.emit('request_message', {'message': msg});
 }
 
@@ -668,19 +668,19 @@ function requestLog(msg){
 //Receive cockroach from server.
 socket.on('new_roach', function(data) {
 
-    console.log('Creating cockroach with id: ' + data.roach_id);
+   // console.log('Creating cockroach with id: ' + data.roach_id);
     createRoach(data.roach_id);
     createdCount++;
 });
 
 socket.on('console_log', function (data) {
-    console.log('Server says: ' + data.message)
+    //console.log('Server says: ' + data.message)
     logServerConsoleToScreen(data.message);
 });
 
 
 socket.on('liveness_update', function (data) {
-    console.log('Server says: ' + data.body)
+    //console.log('Server says: ' + data.body)
     logServerConsoleToScreen(data.body);
 })
 
@@ -689,12 +689,12 @@ socket.on('liveness_update', function (data) {
 //Setting game window sizes.
 function setGameWindowDimensions(){
 
-    console.log("RESIZING DIS BITCH");
+   // console.log("RESIZING DIS BITCH");
 
     var width = document.getElementById("gameCanvasContainer").offsetWidth;
     var height = document.getElementById("gameCanvasContainer").offsetHeight;
-    console.log("Width: " + width);
-    console.log("Height: " + height);
+    //console.log("Width: " + width);
+    //console.log("Height: " + height);
 
     var canvas = document.getElementById("gameCanvas");
     canvas.width = width;
