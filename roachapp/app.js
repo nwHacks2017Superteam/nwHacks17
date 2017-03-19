@@ -81,7 +81,6 @@ io.on('connection', function(socket) {
             process.kill(sessions[socket]['pids'][i], 'SIGKILL');
             //child_process.exec(`kill ${sessions[socket]['pids'][i]}`);
         }
-        // TODO -- add graceful shutdown of all nodes in the cluster associated with the session
     });
     // TODO -- spin up cockroach cluster (should it be here?)
     // TODO -- associate cockroach cluster with uuid (global hashtable? json file?)
