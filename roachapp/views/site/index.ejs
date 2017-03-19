@@ -6,20 +6,19 @@
     <script src="/scripts/mdl.js"></script> -->
 
     <link rel="stylesheet" href="styles/style.css">
-    <script src="scripts/scripts.js"></script>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
-    <script>
-        var socket = io();
-        var session_id;
 
-        socket.on('give_session', function(msg) {
-            console.log(JSON.stringify(msg));
-            session_id = msg.id;
-        });
+
+    <script src="scripts/script.js">console.log("yo");</script>
+
+
+    <script>
+        //Start the client-server connection.
+        onClientLoad();
     </script>
 
 
@@ -30,13 +29,14 @@
 
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
 
+        <!--
         <header class="mdl-layout__header mdl-layout__header--scroll">
             <div class="mdl-layout__header-row">
-                <!-- Title -->
+
                 <span class="mdl-layout-title">Food planning app.</span>
-                <!-- Add spacer, to align navigation to the right -->
+
                 <div class="mdl-layout-spacer"></div>
-                <!-- Navigation -->
+
             </div>
         </header>
 
@@ -50,6 +50,8 @@
                 <a class="mdl-navigation__link" href="#">You?</a>
             </nav>
         </div>
+        -->
+
 
         <main class="mdl-layout__content">
 
@@ -63,16 +65,10 @@
                             <h2 class="mdl-card__title-text">Debug Window</h2>
                         </div>
                         <div class="mdl-card__supporting-text">
-                            Sample output.
-                            Sample output.
-                            Sample output.
-                            Sample output.
-                            Sample output.
-                            Sample output.
-                            Sample output.
-                            Sample output.
-                        </div>
+                            <ul id='console-list' class="demo-list-control mdl-list">
 
+                            </ul>
+                        </div>
                         <div class="mdl-card__menu">
                             <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
                                 <i class="material-icons">share</i>
@@ -130,3 +126,15 @@
 
     </div>
 </div>
+
+
+<footer>
+
+    <script src="scripts/script.js"></script>
+
+    <script>
+        //Start the client-server connection.
+        onClientLoad();
+    </script>
+
+</footer>
