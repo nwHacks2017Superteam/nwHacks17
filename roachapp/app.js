@@ -51,15 +51,19 @@ io.on('connection', function(socket) {
     var uuid = uuidV4();
     console.log(`a user connected, with ${uuid}`);
     if (!sessions[uuid]) {
-        console.log('space available!');
+        // console.log('space available!');
         sessions[uuid] = [];
     }
 
     io.emit('give_session', { 'id': uuid });
 
-    io.on('kill_cockroach', function(msg) {
+    socket.on('kill_cockroach', function(msg) {
         // TODO -- call script to violently murder a cockroachDB instance
     });
+
+    socket.on('disconnect', function(socket) {
+
+    }
     // TODO -- spin up cockroach cluster (should it be here?)
     // TODO -- associate cockroach cluster with uuid (global hashtable? json file?)
 });
