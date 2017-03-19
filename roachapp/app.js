@@ -115,7 +115,7 @@ io.on('connection', function(socket) {
                 }
             });*/
 
-            if (majBig > (nodeslen * 3) / 4) {
+            if (majBig >= nodeslen/2) {
                 //console.log('no draining!');
                 var new_instance_proc = child_process.spawn('bash-scripts/start-instance.sh', ['-p', sessions[socket]['pg_port']]);
 
