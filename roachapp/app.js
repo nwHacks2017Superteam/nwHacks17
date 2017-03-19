@@ -72,7 +72,6 @@ io.on('connection', function(socket) {
             sessions[socket]['pg_port'] = fields[1];
             sessions[socket]['http_port'] = fields[2];
             checkAPI(sessions[socket]['http_port']);
-            //console.log(`http://localhost:${sessions[socket]['http_port']}/#/cluster/nodes`);
             io.emit('give_session', { 'id': uuid, 'roach_ids': sessions[socket]['pids'], 'admin_interface_url': `http://localhost:${sessions[socket]['http_port']}/#/cluster/nodes` });
         } else if (fields.length == 1) {
 
@@ -86,14 +85,19 @@ io.on('connection', function(socket) {
     var checkAPITimeout = null;
 
     function checkAPI(port) {
-        //console.log(`localhost:${port}/_admin/v1/liveness`);
-        request(`http://localhost:${port}/_admin/v1/liveness`, function (error, response, body) {
+        request(`http://localhost:${port}/_status/nodes`, function (error, response, body) {
             var JSONbody = JSON.parse(body);
             //console.log(JSON.stringify(JSONbody));
 
-            var draining = JSONbody['livenesses'].filter(instance => instance['draining']).length;
+            //var draining = JSONbody['livenesses'].filter(instance => instance['draining']).length;
 
-            if (draining == 0) {
+            var nodes = JSONbody.nodes;
+
+            var allBig = nodes.every(function(node) {
+                node.storeStatuses[0].metrics.replicas >= 10;
+            });
+
+            if (allBig) {
                 //console.log('no draining!');
                 var new_instance_proc = child_process.spawn('bash-scripts/start-instance.sh', ['-p', sessions[socket]['pg_port']]);
 
@@ -105,7 +109,7 @@ io.on('connection', function(socket) {
                 });
             }
 
-            io.emit('liveness_update', {'body': body, 'draining': draining});
+            //io.emit('liveness_update', {'body': body, 'draining': draining});
             checkAPITimeout = setTimeout(function() { checkAPI(port) }, 1000);
         });
     }
