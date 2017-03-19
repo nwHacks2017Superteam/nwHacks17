@@ -574,11 +574,8 @@ function within_circle(x, y, circle_x, circle_y, radius) {
 
 //Init sockets
 var socket = io();
-
-
 //Session id for the game.
 var session_id;
-
 //Array of all the game objects.
 var cockroaches = [];
 
@@ -599,7 +596,7 @@ function logServerConsoleToScreen(message){
     input = JSON.stringify(message);
     div.className = 'mdl-list__item scrolling-list-element';
     div.innerHTML = '<span class="mdl-list__item-primary-content"/>' + "$> " +
-        input.
+        input
         + '</span>';
     document.getElementById('console-list').appendChild(div);
 }
