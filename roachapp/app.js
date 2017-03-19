@@ -64,7 +64,7 @@ io.on('connection', function(socket) {
 
     childproc.stdout.on('data', (data) => {
         sessions[socket]['pids'].push(`${parseInt(data)}`);
-        console.log(JSON.stringify(sessions[socket]['pids']));
+        //console.log(JSON.stringify(sessions[socket]['pids']));
     });
 
     io.emit('give_session', { 'id': uuid });
