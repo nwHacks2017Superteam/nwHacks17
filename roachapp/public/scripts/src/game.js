@@ -17,13 +17,20 @@ var trail_duration = 3;
 
 var attacks = [];
 var attack_layer = new createjs.Container();
-var hit_radius = 100;
-var attack_duration = 2;
+var hit_radius = 120;
+var attack_duration = 1.8;
 
 var spawns = [];
 var spawn_layer = new createjs.Container();
 var spawn_duration = 1;
 var spawn_radius = 20;
+
+var shards = [];
+var shard_layer = new createjs.Container();
+var shard_short_duration = 1.5;
+var shard_duration = 3;
+var shard_velocity = 20;
+var shard_omega = 720;
 
 let available_ids = [];
 
@@ -112,6 +119,7 @@ function init() {
 
     stage.addChild(background);
     stage.addChild(score);
+    stage.addChild(shard_layer);
     stage.addChild(trail_layer);
     stage.addChild(spawn_layer);
     stage.addChild(attack_layer);
@@ -221,9 +229,27 @@ function update(event) {
         }
 
     }
+    //update shards
+    for(i = shards.length - 1; i >= 0; i--) {
+        shards[i].lifetime += delta_time;
+        if(shards[i].lifetime >= shard_duration) {
+            shard_layer.removeChild(shards[i].display_object);
+            shards.splice(i,1);
+            continue;
+        }
+        shards[i].display_object.x += shards[i].velocity * Math.cos(shards[i].angle / 180 * Math.PI) * delta_time;
+        shards[i].display_object.y += shards[i].velocity * Math.sin(shards[i].angle / 180 * Math.PI) * delta_time;
+        shards[i].display_object.rotation += shards[i].omega * delta_time;
+
+        let short_tween = Math.max(0, 1 - Math.pow(shards[i].lifetime / shard_short_duration, 1/2));
+        let long_tween = 1 - Math.pow(shards[i].lifetime / shard_duration, 2);
+
+        shards[i].omega = Math.sign(shards[i].omega) * shard_omega * short_tween;
+        shards[i].display_object.alpha = long_tween;
+    }
 
     if(trail_accumulator > trail_interval){
-            trail_accumulator -= trail_interval;
+        trail_accumulator -= trail_interval;
     }
 
     //update roach trails
@@ -249,6 +275,7 @@ function update(event) {
             attacks[i].lifetime += delta_time;
             if(attacks[i].lifetime >= attack_duration) {
                 attack_layer.removeChild(attacks[i].line_display_object);
+                create_shards(attacks[i].line_display_object.x, attacks[i].line_display_object.y, attacks[i].roach.color);
                 kill_roach(attacks[i].roach);
                 attacks.splice(i,1);
                 continue;
@@ -357,6 +384,36 @@ function kill_roach(roach) {
             roaches.splice(i, 1);
             break;
         }
+    }
+}
+
+function create_shards(x, y, color) {
+    let count = 30 + Math.round(Math.random() * 15);
+    let true_color = "White";
+    switch (color) {
+        case "blue":
+            true_color = "#0000ff";
+            break;
+        case "green":
+            true_color = "#00ff00";
+            break;
+        case "red":
+            true_color = "#ff0000";
+            break;
+    }
+    for (i = 0; i < count; i++) {
+        let shard_shape = new createjs.Shape();
+        shard_shape.graphics.beginFill(true_color).drawRect(-3,-3,6,6);
+        shard_shape.x = x;
+        shard_shape.y = y;
+        shards.push({
+            display_object: shard_shape,
+            velocity: shard_velocity * Math.random(),
+            omega: shard_omega * (Math.random() < 0.5 ? -1 : 1),
+            angle: Math.random() * 360,
+            lifetime: 0
+        });
+        shard_layer.addChild(shard_shape);
     }
 }
 
