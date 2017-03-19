@@ -37,8 +37,13 @@ cd /tmp
 # Start the main db instance and save the port it's running on
 mainPort=$(getFreePort 12000)
 httpPort=$(getFreePort $(($mainPort+1)))
-cockroach start --background --port=$mainPort --http-port=$httpPort --store=node$RANDOM > /dev/null
-echo "$(ps -fC "cockroach" | tail -1 | awk '{print $2}'),$mainPort,$httpPort"
+nodeNum=$RANDOM
+cockroach start --background --port=$mainPort --http-port=$httpPort --store=node$nodeNum > /dev/null
+if [[ "$OSTYPE" == 'linux-gnu' ]]; then
+    echo "$(ps -fC "cockroach" | grep node$nodeNum | tail -1 | awk '{print $2}'),$mainPort,$httpPort"
+else
+    echo "$(ps aux | grep "cockroach" | grep "node$nodeNum" | awk '{print $2}'),$mainPort,$httpPort"
+fi
 
 # Start up however many db instances we asked for
 # and echo the pid of each one
@@ -61,5 +66,9 @@ sleep 4
 # Get the process id's of the nodes we just created
 for nodeNum in "${nodeNums[@]}";
 do
-    echo $(ps -fC "cockroach" | grep "node$nodeNum" | awk '{print $2}')
+    if [[ "$OSTYPE" == 'linux-gnu' ]]; then
+        echo "$(ps -fC "cockroach" | grep node$nodeNum | tail -1 | awk '{print $2}')"
+    else
+        echo "$(ps aux | grep "cockroach" | grep "node$nodeNum" | awk '{print $2}')"
+    fi
 done
