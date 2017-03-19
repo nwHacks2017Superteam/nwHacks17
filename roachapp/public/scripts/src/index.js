@@ -36,6 +36,7 @@ function updateStatistics(){
 
 
 
+
 //Called on cockroch destroyed
 function destroyRoach(roachID){
     var message = {'pid': roachID}
@@ -137,6 +138,13 @@ function setGameWindowDimensions(){
 window.onresize = function(event) {
     setGameWindowDimensions();
 };
+
+function setiframecontent(){
+    var canvas = document.getElementById("admin-window");
+    canvas.src = admin_url;
+}
+
+setiframecontent();
 
 setGameWindowDimensions();
 
