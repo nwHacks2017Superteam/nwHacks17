@@ -55,6 +55,7 @@ do
     #echo $(ps -fC cockroach | tail -1 | awk '{print $2}')
 done
 
+
 # Wait for the node instances to run up
 sleep 4
 
