@@ -50,8 +50,13 @@ cd /tmp
 # Start up however many db instances we asked for
 # and echo the pid of each one
 nodeNums=()
+if [ $NUM_SERVERS == 0 ]; then
+    exit 0
+fi
+
 for i in `eval echo {0..$NUM_SERVERS}`
 do
+    echo $i
     # Choose a random node id
     nodeNum=$RANDOM
     # Save the node id to the list of id's
