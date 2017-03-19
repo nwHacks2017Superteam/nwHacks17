@@ -25,8 +25,6 @@ var spawn_radius = 20;
 
 let available_ids = [];
 
-//let red_roach_bmp = new createjs.Bitmap("../images/red_roach.png");
-
 let width = 0;
 let height = 0;
 
@@ -102,7 +100,7 @@ function init() {
 
 
     createjs.Ticker.addEventListener("tick", update);
-    createjs.Ticker.setFPS(30);
+    createjs.Ticker.setFPS(60);
 }
 
 function update_mouse(mouse_event) {
@@ -116,9 +114,9 @@ function update(event) {
 
     trail_accumulator += delta_time;
 
-    if(roaches.length + spawns.length == 0 && available_ids.length != 0) {
-        spawn_roach_wave(available_ids.splice(0, available_ids.length));
-        //spawn_roach_wave('abcde'.split(''));
+    if(roaches.length + spawns.length == 0 ){ //&& available_ids.length != 0) {
+        //spawn_roach_wave(available_ids.splice(0, available_ids.length));
+        spawn_roach_wave('abcde'.split(''));
     }
 
     //update spawns
@@ -307,7 +305,7 @@ function killall() {
 
 function kill_roach(roach) {
     //TODO: add gibbing
-    destroyRoach(roach.id);
+    //destroyRoach(roach.id);
     roach_layer.removeChild(roach.display_object);
     for(i = 0; i < roaches.length; i++) {
         if(roaches[i] === roach) {
@@ -318,9 +316,9 @@ function kill_roach(roach) {
 }
 
 function construct_blue_roach(id) {
-    let roach_display = new createjs.Shape();
-    roach_display.graphics.beginStroke("Black").beginFill("Blue").drawRect(-10, -10, 20, 20);
-    roach_display.rotation = 90;
+    let roach_display = new createjs.Bitmap("../Projects/nwHacks17/roachapp/public/images/blue_roach.png");
+    roach_display.regX = 15;
+    roach_display.regY = 15;
     return {
         id: id,
         color: "blue",
@@ -333,8 +331,9 @@ function construct_blue_roach(id) {
 }
 
 function construct_green_roach(id) {
-    let roach_display = new createjs.Shape();
-    roach_display.graphics.beginStroke("Black").beginFill("Green").drawRect(-10, -10, 20, 20);
+    let roach_display = new createjs.Bitmap("../Projects/nwHacks17/roachapp/public/images/green_roach.png");
+    roach_display.regX = 15;
+    roach_display.regY = 15;
     let angle = Math.random() * 2 * Math.PI;
     let omega = (Math.random() - 0.5) * 2;
     return {
@@ -353,9 +352,9 @@ function construct_green_roach(id) {
 }
 
 function construct_red_roach(id) {
-    let roach_display = new createjs.Shape();
-    roach_display.graphics.beginStroke("Black").beginFill("Red").drawRect(-10, -10, 20, 20);
-    roach_display.rotation = 90;
+    let roach_display = new createjs.Bitmap("../Projects/nwHacks17/roachapp/public/images/red_roach.png");
+    roach_display.regX = 15;
+    roach_display.regY = 15;
     return {
         id: id,
         color: "red",
@@ -400,6 +399,12 @@ function update_blue_roach(roach, delta_time) {
         roach.direction.y *= -1;
     }
 
+    let angle = Math.atan(roach.direction.y/roach.direction.x) * 180 / Math.PI;
+    if(roach.direction.x < 0) {
+        angle = 180 + angle;
+    }
+    roach.display_object.rotation = angle;
+
 }
 
 function update_green_roach(roach, delta_time) {
@@ -424,7 +429,7 @@ function update_green_roach(roach, delta_time) {
     roach.direction.x = Math.cos(roach.theta);
     roach.direction.y = Math.sin(roach.theta);
 
-    roach.display_object.rotation = roach.theta * 180 / Math.PI + 45;
+    roach.display_object.rotation = roach.theta * 180 / Math.PI;
 
     roach.display_object.x += delta_time * green_roach_speed * roach.direction.x;
     roach.display_object.y += delta_time * green_roach_speed * roach.direction.y;
@@ -475,13 +480,13 @@ function update_red_roach(roach, delta_time) {
     else {
         roach.direction.x = dx / length;
         roach.direction.y = dy / length;
+        let angle = Math.atan(roach.direction.y/roach.direction.x) * 180 / Math.PI;
+        if(roach.direction.x < 0) {
+            angle = 180 + angle;
+        }
+        roach.display_object.rotation = angle;
     }
 
-    let angle = Math.atan(roach.direction.y/roach.direction.x) * 180 / Math.PI;
-    if(dx < 0) {
-        angle = 180 + angle;
-    }
-    roach.display_object.rotation = angle + 45;
 
     roach.display_object.x += delta_time * speed * roach.direction.x;
     roach.display_object.y += delta_time * speed * roach.direction.y;
