@@ -28,16 +28,17 @@ fi
 
 function getFreePort ()
 {
-    ss -tln | awk 'NR > 1{gsub(/.*:/,"",$4); print $4}' | sort -un | awk -v n=12000 '$0 < n {next}; $0 == n {n++; next}; {exit}; END {print n}'
+    ss -tln | awk 'NR > 1{gsub(/.*:/,"",$4); print $4}' | sort -un | awk -v n=$1 '$0 < n {next}; $0 == n {n++; next}; {exit}; END {print n}'
 }
 
 # Change to /tmp so we dont clutter up the project directory
 cd /tmp
 
 # Start the main db instance and save the port it's running on
-mainPort=$(getFreePort)
-cockroach start --background --port=$mainPort --http-port=0 --store=node$RANDOM > /dev/null
-echo $(ps -fC cockroach | tail -1 | awk '{print $2}')
+mainPort=$(getFreePort 12000)
+httpPort=$(getFreePort $(($mainPort+1)))
+cockroach start --background --port=$mainPort --http-port=$httpPort --store=node$RANDOM > /dev/null
+echo "$(ps -fC cockroach | tail -1 | awk '{print $2}'),$mainPort,$httpPort"
 
 # Start up however many db instances we asked for
 # and echo the pid of each one
