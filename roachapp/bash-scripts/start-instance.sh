@@ -16,6 +16,9 @@ if [ "$masterInstancePort" == "" ]; then
     exit 1
 fi
 
+# Change to /tmp so we dont clutter up the project directory
+cd /tmp
+
 nodeNum=$RANDOM
 cockroach start --background --port=0 --http-port=0 --store=node$nodeNum --join=localhost:$masterInstancePort > /dev/null 
 
