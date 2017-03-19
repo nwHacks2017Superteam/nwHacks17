@@ -37,11 +37,12 @@ cd /tmp
 # Start the main db instance and save the port it's running on
 mainPort=$(getFreePort 12000)
 httpPort=$(getFreePort $(($mainPort+1)))
-cockroach start --background --port=$mainPort --http-port=$httpPort --store=node$RANDOM > /dev/null
+nodeNum=$RANDOM
+cockroach start --background --port=$mainPort --http-port=$httpPort --store=node$nodeNum > /dev/null
 if [[ "$OSTYPE" == 'linux-gnu' ]]; then
-    echo "$(ps -fC "cockroach" | tail -1 | awk '{print $2}'),$mainPort,$httpPort"
+    echo "$(ps -fC "cockroach" | grep node$nodeNum | tail -1 | awk '{print $2}'),$mainPort,$httpPort"
 else
-    echo "$(ps aux -O started | grep "cockroach" | grep "node$nodeNum" | awk '{print $2}'),$mainPort,$httpPort"
+    echo "$(ps aux | grep "cockroach" | grep "node$nodeNum" | awk '{print $2}'),$mainPort,$httpPort"
 fi
 
 # Start up however many db instances we asked for
@@ -66,8 +67,8 @@ sleep 4
 for nodeNum in "${nodeNums[@]}";
 do
     if [[ "$OSTYPE" == 'linux-gnu' ]]; then
-        echo $(ps -fC "cockroach" | grep "node$nodeNum" | awk '{print $2}')
+        echo "$(ps -fC "cockroach" | grep node$nodeNum | tail -1 | awk '{print $2}')"
     else
-        echo $(ps aux -O started | grep "cockroach" | grep "node$nodeNum" | awk '{print $2}')
+        echo "$(ps aux | grep "cockroach" | grep "node$nodeNum" | awk '{print $2}')"
     fi
 done
