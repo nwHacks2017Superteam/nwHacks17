@@ -15,14 +15,14 @@ var cockroaches = [];
 //Array of staging cockroaches
 var stageroaches = [];
 
-
 var createdCount = 0;
 var destroyedCount = 0;
+
+
 
 function updateCreatedCounter() {
     document.getElementById("created-counter").innerHTML = "Created: " + createdCount;
 }
-
 
 function updateDestroyedCounter() {
     document.getElementById("destroyed-counter").innerHTML = "Destroyed: " + destroyedCount;
@@ -32,8 +32,6 @@ function updateStatistics(){
     updateCreatedCounter();
     updateDestroyedCounter();
 }
-
-
 
 
 
@@ -112,12 +110,7 @@ socket.on('console_log', function (data) {
 
 socket.on('liveness_update', function (data) {
     //console.log('Server says: ' + data.body)
-
-
-
-
-
-    logServerConsoleToScreen(data.body);
+    //logServerConsoleToScreen(data.body);
 })
 
 

@@ -632,14 +632,14 @@ var cockroaches = [];
 //Array of staging cockroaches
 var stageroaches = [];
 
-
 var createdCount = 0;
 var destroyedCount = 0;
+
+
 
 function updateCreatedCounter() {
     document.getElementById("created-counter").innerHTML = "Created: " + createdCount;
 }
-
 
 function updateDestroyedCounter() {
     document.getElementById("destroyed-counter").innerHTML = "Destroyed: " + destroyedCount;
@@ -649,8 +649,6 @@ function updateStatistics(){
     updateCreatedCounter();
     updateDestroyedCounter();
 }
-
-
 
 
 
@@ -686,9 +684,16 @@ function logServerConsoleToScreen(message){
 function onClientLoad(){
     //console.log(socket);
 
+    var roachIDs = []
     socket.on('give_session', function(msg) {
         //console.log(JSON.stringify(msg));
         session_id = msg.id;
+        admin_url = msg.admin_interface_url;
+        roachIDs = msg.roach_ids;
+
+        roachIDs.forEach(function(id){
+            createRoach(id);
+        });
     });
 }
 
@@ -701,13 +706,6 @@ function createRoach(newRoachID){
     createCockroach(returnRoach.id);
     updateStatistics();
 }
-
-//Testing round trip to server and back
-function requestLog(msg){
-    //console.log('sending message to server');
-    socket.emit('request_message', {'message': msg});
-}
-
 
 
 
@@ -729,7 +727,7 @@ socket.on('console_log', function (data) {
 
 socket.on('liveness_update', function (data) {
     //console.log('Server says: ' + data.body)
-    logServerConsoleToScreen(data.body);
+    //logServerConsoleToScreen(data.body);
 })
 
 
