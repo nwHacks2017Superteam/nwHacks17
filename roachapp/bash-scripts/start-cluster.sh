@@ -38,10 +38,10 @@ cockroach start --background --port=$mainPort --http-port=$httpPort --store=node
 echo "$(ps -fC cockroach | tail -1 | awk '{print $2}'),$mainPort,$httpPort"
 
 # Create the database
-cockroach zone --port=$mainPort set .default -f new_default.yaml
-cockroach sql --port=$mainPort --execute="create DATABASE data;"
-cockroach sql --port=$mainPort --database=data --execute="CREATE TABLE csv (x INT, y INT, z INT);"
-cockroach sql --port=$mainPort --database=data < setup.sql
+cockroach zone --port=$mainPort set .default -f new_default.yaml > /dev/null
+cockroach sql --port=$mainPort --execute="create DATABASE data;" > /dev/null
+cockroach sql --port=$mainPort --database=data --execute="CREATE TABLE csv (x INT, y INT, z INT);" > /dev/null
+cockroach sql --port=$mainPort --database=data < setup.sql > /dev/null
 
 
 # Change to /tmp so we dont clutter up the project directory
