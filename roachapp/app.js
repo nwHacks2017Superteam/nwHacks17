@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var child_process = require('child_process');
 
 var index = require('./routes/index');
 
@@ -51,10 +52,18 @@ app.use(function(err, req, res, next) {
 io.on('connection', function(socket) {
     var uuid = uuidV4();
     console.log(`a user connected, with ${uuid}`);
-    if (!sessions[uuid]) {
-        // console.log('space available!');
-        sessions[uuid] = [];
+
+    child_process.execFile('./bash-scripts/start-cluster.sh', ['-n', '20'], (error, stdout, stderr) => {
+        console.log(`stdout: ${stdout}`);
+    });
+
+    if (!sessions[socket]) {
+        sessions[socket] = {
+            'uuid': uuid,
+            'pids': [] // populate with pids
+        };
     }
+
 
     io.emit('give_session', { 'id': uuid });
 
@@ -62,7 +71,7 @@ io.on('connection', function(socket) {
         // TODO -- call script to violently murder a cockroachDB instance
     });
 
-    socket.on('disconnect', function(msg) {
+    socket.on('disconnect', function() {
         // TODO -- add graceful shutdown of all nodes in the cluster associated with the session
     });
     // TODO -- spin up cockroach cluster (should it be here?)
