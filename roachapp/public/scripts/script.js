@@ -668,6 +668,7 @@ socket.on('new_roach', function(data) {
 
     console.log('Creating cockroach with id: ' + data.roach_id);
     createRoach(data.roach_id);
+    createdCount++;
 });
 
 socket.on('console_log', function (data) {
