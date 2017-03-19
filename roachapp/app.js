@@ -82,12 +82,22 @@ io.on('connection', function(socket) {
     });
 
     function checkAPI(port) {
-        console.log(`localhost:${port}/_admin/v1/liveness`);
+        //console.log(`localhost:${port}/_admin/v1/liveness`);
         request(`http://localhost:${port}/_admin/v1/liveness`, function (error, response, body) {
             var JSONbody = JSON.parse(body);
             //console.log(JSON.stringify(JSONbody));
 
             var draining = JSONbody['livenesses'].filter(instance => instance['draining']).length;
+
+            if (draining == 0) {
+                //console.log('no draining!');
+                var new_instance_proc = child_process.spawn('bash-scripts/start-instance.sh', ['-p', sessions[socket]['pg_port']]);
+
+                new_instance_proc.stdout.on('data', function(data) {
+                    io.emit('new_roach', {'roach_id' : `${data}`.trim()});
+                });
+            }
+
             io.emit('liveness_update', {'body': body, 'draining': draining});
             
             setTimeout(function() { checkAPI(port) }, 1000);
