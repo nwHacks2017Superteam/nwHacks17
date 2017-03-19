@@ -3,8 +3,19 @@
   <head>
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+        var session_id;
+
+        socket.on('give_session', function(msg) {
+            console.log(JSON.stringify(msg));
+            session_id = msg.id;
+        });
+    </script>
   </head>
   <body>
+    <!-- TODO: GAME GOES HERE, or somewhere similar -->
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>
   </body>

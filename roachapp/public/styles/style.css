@@ -1,0 +1,20 @@
+.fill-width {
+  width: 100% !important; }
+
+.fill-height {
+  height: 100% !important; }
+
+.m-auto {
+  margin: auto; }
+
+.side-menu {
+  min-height: inherit !important;
+  height: 90vh !important; }
+
+.debug-menu {
+  min-height: inherit !important;
+  height: 20vh !important; }
+
+.game-window {
+  min-height: inherit !important;
+  height: 70vh !important; }

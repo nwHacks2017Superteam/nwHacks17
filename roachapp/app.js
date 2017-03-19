@@ -6,9 +6,14 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
-var users = require('./routes/users');
 
 var app = express();
+var server = require('http').createServer(app);
+var io = require('socket.io')(server);
+var uuidV4 = require('uuid/v4');
+
+sessions = {};
+sessions.asdf = 'asdf';
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -21,9 +26,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname + '/public'));
 
 app.use('/', index);
-app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -43,4 +48,28 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+io.on('connection', function(socket) {
+    var uuid = uuidV4();
+    console.log(`a user connected, with ${uuid}`);
+    if (!sessions[uuid]) {
+        // console.log('space available!');
+        sessions[uuid] = [];
+    }
+
+    io.emit('give_session', { 'id': uuid });
+
+    socket.on('kill_cockroach', function(msg) {
+        // TODO -- call script to violently murder a cockroachDB instance
+    });
+
+    socket.on('disconnect', function(msg) {
+        // TODO -- add graceful shutdown of all nodes in the cluster associated with the session
+    });
+    // TODO -- spin up cockroach cluster (should it be here?)
+    // TODO -- associate cockroach cluster with uuid (global hashtable? json file?)
+});
+
 module.exports = app;
+
+console.log(JSON.stringify(sessions));
+server.listen(3000);
