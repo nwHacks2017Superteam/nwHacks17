@@ -86,7 +86,7 @@ io.on('connection', function(socket) {
     function checkAPI(port) {
         //console.log(`localhost:${port}/_admin/v1/liveness`);
         request(`http://localhost:${port}/_admin/v1/liveness`, function (error, response, body) {
-            var JSONbody = JSON.parse(body);
+            var JSONbody = JSON.parse(body).sort(function(b,c) { return parseInt(b.epoch) - parseInt(c.epoch); });
             //console.log(JSON.stringify(JSONbody));
 
             var draining = JSONbody['livenesses'].filter(instance => instance['draining']).length;
