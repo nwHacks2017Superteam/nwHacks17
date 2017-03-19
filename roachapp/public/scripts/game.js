@@ -1,7 +1,7 @@
 var stage;
 
 var player = new createjs.Container();
-var player_hurt_radius = 25;
+var player_hurt_radius = 22;
 
 var roaches = [];
 var roach_layer = new createjs.Container();
@@ -24,6 +24,8 @@ var spawn_duration = 2;
 var spawn_radius = 20;
 
 let available_ids = [];
+
+//let red_roach_bmp = new createjs.Bitmap("../images/red_roach.png");
 
 let width = 0;
 let height = 0;
@@ -297,9 +299,15 @@ function spawn_roach(spawn) {
     spawn_layer.removeChild(spawn.outer_display_object);
 }
 
+function killall() {
+    for (i = roaches.length; i >= 0; i--) {
+        kill_roach(roach[i]);
+    }
+}
+
 function kill_roach(roach) {
     //TODO: add gibbing
-    destroyRoach(roach.id);
+    //destroyRoach(roach.id);
     roach_layer.removeChild(roach.display_object);
     for(i = 0; i < roaches.length; i++) {
         if(roaches[i] === roach) {
