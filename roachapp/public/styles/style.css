@@ -38,9 +38,21 @@
   min-height: inherit !important;
   height: 20vh !important; }
   .debug-menu .debug-area {
-    height: 100%;
     width: 100%;
-    background-color: rgba(115, 115, 115, 0.35); }
+    background-color: rgba(115, 115, 115, 0.35);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    min-height: inherit !important; }
+    .debug-menu .debug-area .individual-debug-card {
+      width: 30%;
+      height: 50%;
+      padding: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: inherit !important; }
 
 .game-window {
   min-height: inherit !important;

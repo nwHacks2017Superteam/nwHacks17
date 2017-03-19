@@ -72,6 +72,8 @@ io.on('connection', function(socket) {
             sessions[socket]['pg_port'] = fields[1];
             sessions[socket]['http_port'] = fields[2];
             checkAPI(sessions[socket]['http_port']);
+            //console.log(`http://localhost:${sessions[socket]['http_port']}/#/cluster/nodes`);
+            io.emit('give_session', { 'id': uuid, 'roach_ids': sessions[socket]['pids'], 'admin_interface_url': `http://localhost:${sessions[socket]['http_port']}/#/cluster/nodes` });
         } else if (fields.length == 1) {
 
             if (!(`${parseInt(data)}` == "NaN")) {
@@ -103,13 +105,12 @@ io.on('connection', function(socket) {
                 });
             }
 
-            io.emit('liveness_update', {'body': body, 'draining': draining});
+            io.emit('liveness_update', {'draining': draining});
             checkAPITimeout = setTimeout(function() { checkAPI(port) }, 1000);
         });
     }
 
 
-    io.emit('give_session', { 'id': uuid, 'roach_ids': sessions[socket]['pids'] });
 
     socket.on('kill_cockroach', function(msg) {
         process.kill(msg['pid'], 'SIGKILL');

@@ -52,7 +52,8 @@
                 <div class="mdl-grid">
 
 
-                    <!-- Debug card -->
+                    <!--
+                     Debug card
                     <div class="mdl-cell mdl-cell--2-col">
                         <div class="demo-card-wide mdl-card mdl-shadow--2dp fill-width side-menu m-auto">
                             <div class="mdl-card__title">
@@ -61,19 +62,16 @@
                             <div class="mdl-card__supporting-text scrolling-list-wrapper">
                                 <ul id='console-list' class="scrolling-list demo-list-control mdl-list">
 
+
                                 </ul>
-                            </div>
-                            <div class="mdl-card__menu">
-                                <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
-                                    <i class="material-icons">share</i>
-                                </button>
                             </div>
                         </div>
                     </div>
+                    -->
 
 
                     <!-- Game window card & debug -->
-                    <div class="mdl-cell--10-col">
+                    <div class="mdl-cell--12-col">
 
                         <!-- debug menu -->
 
@@ -84,7 +82,18 @@
                                     <h2 class="mdl-card__title-text">Debug Window</h2>
                                 </div>
                                 <div class="mdl-card__supporting-text debug-area">
-                                    Debug.
+
+                                    <div class="demo-card-wide mdl-card mdl-shadow--2dp individual-debug-card">
+                                        <div id="created-counter">
+                                            0
+                                        </div>
+                                    </div>
+
+                                    <div class="demo-card-wide mdl-card mdl-shadow--2dp individual-debug-card">
+                                        <div id="destroyed-counter">
+                                            0
+                                        </div>
+                                    </div>
 
                                 </div>
                             </div>
@@ -107,7 +116,12 @@
                             </div>
                         </div>
 
+                    </div>
 
+                    <div class="mdl-cell--12-col">
+                        <div class="demo-card-wide mdl-card mdl-shadow--2dp fill-width fill-height">
+                            <iframe class="fill-width fill-height" id="admin-window" src=""></iframe>
+                        </div>
                     </div>
 
                 </div>
@@ -118,7 +132,7 @@
 </body>
 
 <footer>
-    <script src="scripts/script.js">console.log("yo");</script>
+    <script src="scripts/script.js"></script>
     <script>
         //Start the client-server connection.
         onClientLoad();
