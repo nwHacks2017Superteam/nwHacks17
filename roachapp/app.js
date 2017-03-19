@@ -74,9 +74,10 @@ io.on('connection', function(socket) {
             checkAPI(sessions[socket]['http_port']);
             io.emit('give_session', { 'id': uuid, 'roach_ids': sessions[socket]['pids'], 'admin_interface_url': `http://localhost:${sessions[socket]['http_port']}/#/cluster/nodes` });
         } else if (fields.length == 1) {
-
-            if (!(`${parseInt(data)}` == "NaN")) {
-                sessions[socket]['pids'].push(`${parseInt(data)}`);
+            var pid = `${parseInt(data)}`
+            if (!(pid == "NaN")) {
+                sessions[socket]['pids'].push(pid);
+                io.emit('new_roach', {'roach_id': pid});
                 console.log(JSON.stringify(sessions[socket]['pids']));
             }
         }
@@ -89,7 +90,13 @@ io.on('connection', function(socket) {
             var JSONbody = JSON.parse(body);
 
             var nodes = JSONbody.nodes;
-            console.log(nodes);
+            console.log(nodes.map(function(node) {
+                if (!!node.storeStatuses) {
+                    return node.storeStatuses[0].metrics.replicas;
+                } else {
+                    return 0;
+                }
+            }));
 
             var allBig = nodes.every(function(node) {
                 node.storeStatuses[0].metrics.replicas >= 10;
