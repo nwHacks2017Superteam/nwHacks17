@@ -60,7 +60,7 @@ io.on('connection', function(socket) {
         };
     }
 
-    var childproc = child_process.spawn('bash-scripts/start-cluster.sh', ['-n', '10', '-u', uuid]);
+    var childproc = child_process.spawn('bash-scripts/start-cluster.sh', ['-n', '0', '-u', uuid]);
 
     childproc.stdout.on('data', (data) => {
         console.log(`${data}`);
@@ -98,11 +98,24 @@ io.on('connection', function(socket) {
                 }
             }));
 
-            var allBig = nodes.every(function(node) {
-                node.storeStatuses[0].metrics.replicas >= 10;
-            });
+            var majBig = 0;
+            var nodeslen = nodes.length;
+            for (var i = 0; i < nodeslen; i++) {
+                if (!!nodes[i].storeStatuses) {
+                    if(nodes[i].storeStatuses[0].metrics.replicas > 0) {
+                       majBig++;
+                    }
+                }
+            }
+            /*nodes.every(function(node) {
+                if (!!node.storeStatuses) {
+                    return node.storeStatuses[0].metrics.replicas > 0;
+                } else {
+                    return 0;
+                }
+            });*/
 
-            if (allBig) {
+            if (majBig > (nodeslen * 3) / 4) {
                 //console.log('no draining!');
                 var new_instance_proc = child_process.spawn('bash-scripts/start-instance.sh', ['-p', sessions[socket]['pg_port']]);
 
