@@ -9,6 +9,29 @@ var session_id;
 //Array of all the game objects.
 var cockroaches = [];
 
+//Array of staging cockroaches
+var stageroaches = [];
+
+
+var createdCount = 0;
+var destroyedCount = 0;
+
+function updateCreatedCounter() {
+    document.getElementById("created-counter").innerHTML = createdCount;
+}
+
+
+function updateDestroyedCounter() {
+    document.getElementById("destroyed-counter").innerHTML = destroyedCount;
+}
+
+function updateStatistics(){
+    updateCreatedCounter();
+    updateDestroyedCounter();
+}
+
+
+
 
 //Called on cockroch destroyed
 function destroyRoach(roachID){
@@ -18,6 +41,9 @@ function destroyRoach(roachID){
     cockroaches.filter(function(item){
         return item.id !== roachID;
     });
+
+    destroyedCount++;
+    updateStatistics();
 }
 
 
@@ -38,14 +64,12 @@ function logServerConsoleToScreen(message){
 
 //Called when the window is loaded.
 function onClientLoad(){
-
     console.log(socket);
 
     socket.on('give_session', function(msg) {
         console.log(JSON.stringify(msg));
         session_id = msg.id;
     });
-
 }
 
 //When new cockroach is created, create the new cockroach object and add it to the list.
@@ -54,7 +78,8 @@ function createRoach(newRoachID){
     cockroaches.push(returnRoach);
 
     //Create cockroach in game.
-    createCockroach(returnRoach.id);
+    //createCockroach(returnRoach.id);
+    updateStatistics();
 }
 
 //Testing round trip to server and back
@@ -111,17 +136,6 @@ window.onresize = function(event) {
 };
 
 setGameWindowDimensions();
-
-
-
-
-
-
-
-
-
-
-
 
 
 
