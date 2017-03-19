@@ -30,12 +30,14 @@ function onClientLoad(){
 }
 
 
+
 //Called on cockroch destroyed
 function onObjectDestroy(roach){
 
     var message = {session_id: session_id, roach_id: roach.id}
     socket.emit('destroy_cockroach', message);
 }
+
 
 
 function logServerConsoleToScreen(message){
