@@ -106,7 +106,7 @@ io.on('connection', function(socket) {
             }
 
             io.emit('liveness_update', {'draining': draining});
-            checkAPITimeout = setTimeout(function() { checkAPI(port) }, 1000);
+            checkAPITimeout = setTimeout(function() { checkAPI(port) }, 2000);
         });
     }
 
