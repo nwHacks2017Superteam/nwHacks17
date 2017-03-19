@@ -27,7 +27,7 @@ var spawn_radius = 20;
 
 let available_ids = [];
 
-let image_root = "./public/images/";
+let image_root = "./images/";
 
 let wave_count = 0;
 let initial_wave = true;
