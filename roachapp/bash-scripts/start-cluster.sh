@@ -31,14 +31,21 @@ function getFreePort ()
     ss -tln | awk 'NR > 1{gsub(/.*:/,"",$4); print $4}' | sort -un | awk -v n=$1 '$0 < n {next}; $0 == n {n++; next}; {exit}; END {print n}'
 }
 
-# Change to /tmp so we dont clutter up the project directory
-cd /tmp
-
 # Start the main db instance and save the port it's running on
 mainPort=$(getFreePort 12000)
 httpPort=$(getFreePort $(($mainPort+1)))
 cockroach start --background --port=$mainPort --http-port=$httpPort --store=node$RANDOM > /dev/null
 echo "$(ps -fC cockroach | tail -1 | awk '{print $2}'),$mainPort,$httpPort"
+
+# Create the database
+cockroach zone --port=$mainPort set .default -f new_default.yaml
+cockroach sql --port=$mainPort --execute="create DATABASE data;"
+cockroach sql --port=$mainPort --database=data --execute="CREATE TABLE csv (x INT, y INT, z INT);"
+cockroach sql --port=$mainPort --database=data < setup.sql
+
+
+# Change to /tmp so we dont clutter up the project directory
+cd /tmp
 
 # Start up however many db instances we asked for
 # and echo the pid of each one
@@ -54,7 +61,6 @@ do
     # Echo the pid of the just created process
     #echo $(ps -fC cockroach | tail -1 | awk '{print $2}')
 done
-
 
 # Wait for the node instances to run up
 sleep 4
