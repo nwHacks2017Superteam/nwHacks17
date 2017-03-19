@@ -99,7 +99,7 @@ io.on('connection', function(socket) {
             }
 
             io.emit('liveness_update', {'body': body, 'draining': draining});
-            
+
             setTimeout(function() { checkAPI(port) }, 1000);
         });
     }
@@ -117,6 +117,7 @@ io.on('connection', function(socket) {
         for (i in sessions[socket]['pids']) {
             process.kill(sessions[socket]['pids'][i], 'SIGKILL');
         }
+        process.kill(sessions[socket]['special_pid'], 'SIGKILL'):
     });
 });
 
