@@ -17,12 +17,12 @@ var createdCount = 0;
 var destroyedCount = 0;
 
 function updateCreatedCounter() {
-    document.getElementById("created-counter").innerHTML = createdCount;
+    document.getElementById("created-counter").innerHTML = "Created: " + createdCount;
 }
 
 
 function updateDestroyedCounter() {
-    document.getElementById("destroyed-counter").innerHTML = destroyedCount;
+    document.getElementById("destroyed-counter").innerHTML = "Destroyed: " + destroyedCount;
 }
 
 function updateStatistics(){
@@ -78,7 +78,7 @@ function createRoach(newRoachID){
     cockroaches.push(returnRoach);
 
     //Create cockroach in game.
-    //createCockroach(returnRoach.id);
+    createCockroach(returnRoach.id);
     updateStatistics();
 }
 
