@@ -308,7 +308,7 @@ function spawn_roach_wave(ids) {
 
     for (i = 0; i < ids.length; i++) {
         let x = margin + Math.random() * (width - margin * 2);
-        let y = margin + Math.random() * (height - top_bar_height - margin * 2);
+        let y = margin + top_bar_height + Math.random() * (height - top_bar_height - margin * 2);
         let roach;
         let color_rand = Math.random() * 3;
         //TODO: spawn different color roaches
