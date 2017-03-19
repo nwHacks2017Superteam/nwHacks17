@@ -1,7 +1,7 @@
 var stage;
 
 var player = new createjs.Container();
-var player_hurt_radius = 25;
+var player_hurt_radius = 22;
 
 var roaches = [];
 var roach_layer = new createjs.Container();
@@ -100,7 +100,7 @@ function init() {
 
 
     createjs.Ticker.addEventListener("tick", update);
-    createjs.Ticker.setFPS(30);
+    createjs.Ticker.setFPS(60);
 }
 
 function update_mouse(mouse_event) {
@@ -116,6 +116,7 @@ function update(event) {
 
     if(roaches.length + spawns.length == 0 && available_ids.length != 0) {
         spawn_roach_wave(available_ids.splice(0, available_ids.length));
+        //spawn_roach_wave('abcde'.split(''));
     }
 
     //update spawns
@@ -237,7 +238,7 @@ function spawn_roach_wave(ids) {
         let x = margin + Math.random() * (width - margin * 2);
         let y = margin + Math.random() * (height - margin * 2);
         let roach;
-        let color_rand = 2;//Math.random() * 3;
+        let color_rand = Math.random() * 3;
         //TODO: spawn different color roaches
         if(color_rand < 1) {
             roach = construct_blue_roach(ids[i]);
@@ -246,7 +247,7 @@ function spawn_roach_wave(ids) {
             roach = construct_green_roach(ids[i]);
         }
         else if(color_rand < 3) {
-            roach = construct_green_roach(ids[i]);
+            roach = construct_red_roach(ids[i]);
         }
         roach.display_object.x = x;
         roach.display_object.y = y;
@@ -262,6 +263,10 @@ function create_spawn_point(roach) {
             break;
         case "green":
             color = "#80ff80";
+            break;
+        case "red":
+            color = "#ff8080";
+            break;
     }
     let circle1 = new createjs.Shape();
     circle1.graphics.setStrokeStyle(2).beginStroke(color).drawCircle(0,0,spawn_radius);
@@ -292,6 +297,12 @@ function spawn_roach(spawn) {
     spawn_layer.removeChild(spawn.outer_display_object);
 }
 
+function killall() {
+    for (i = roaches.length; i >= 0; i--) {
+        kill_roach(roach[i]);
+    }
+}
+
 function kill_roach(roach) {
     //TODO: add gibbing
     destroyRoach(roach.id);
@@ -302,15 +313,12 @@ function kill_roach(roach) {
             break;
         }
     }
-
-
-
 }
 
 function construct_blue_roach(id) {
-    let roach_display = new createjs.Shape();
-    roach_display.graphics.beginStroke("Black").beginFill("Blue").drawRect(-10, -10, 20, 20);
-    roach_display.rotation = 90;
+    let roach_display = new createjs.Bitmap("./public/images/blue_roach.png");
+    roach_display.regX = 15;
+    roach_display.regY = 15;
     return {
         id: id,
         color: "blue",
@@ -323,8 +331,9 @@ function construct_blue_roach(id) {
 }
 
 function construct_green_roach(id) {
-    let roach_display = new createjs.Shape();
-    roach_display.graphics.beginStroke("Black").beginFill("Green").drawRect(-10, -10, 20, 20);
+    let roach_display = new createjs.Bitmap("./public/images/green_roach.png");
+    roach_display.regX = 15;
+    roach_display.regY = 15;
     let angle = Math.random() * 2 * Math.PI;
     let omega = (Math.random() - 0.5) * 2;
     return {
@@ -342,6 +351,22 @@ function construct_green_roach(id) {
     };
 }
 
+function construct_red_roach(id) {
+    let roach_display = new createjs.Bitmap("./public/images/red_roach.png");
+    roach_display.regX = 15;
+    roach_display.regY = 15;
+    return {
+        id: id,
+        color: "red",
+        display_object: roach_display,
+        turned_iterator: -1,
+        direction: {
+            x: Math.random() < 0.5 ? -1 : 1,
+            y: Math.random() < 0.5 ? -1 : 1
+        }
+    };
+}
+
 function update_roach(roach, delta_time) {
     switch(roach.color) {
         case "blue": 
@@ -349,6 +374,9 @@ function update_roach(roach, delta_time) {
             break;
         case "green": 
             update_green_roach(roach, delta_time);
+            break;
+        case "red":
+            update_red_roach(roach, delta_time);
             break;
         default:
             console.log("DEFAULTED!");
@@ -358,6 +386,11 @@ function update_roach(roach, delta_time) {
 function update_blue_roach(roach, delta_time) {
     let blue_roach_speed = 150;
 
+
+    roach.display_object.x += delta_time * blue_roach_speed * roach.direction.x;
+    roach.display_object.y += delta_time * blue_roach_speed * roach.direction.y;
+
+
     if(roach.display_object.x > width || roach.display_object.x < 0) {
         roach.direction.x *= -1;
     }
@@ -366,24 +399,17 @@ function update_blue_roach(roach, delta_time) {
         roach.direction.y *= -1;
     }
 
-    roach.display_object.x += delta_time * blue_roach_speed * roach.direction.x;
-    roach.display_object.y += delta_time * blue_roach_speed * roach.direction.y;
+    let angle = Math.atan(roach.direction.y/roach.direction.x) * 180 / Math.PI;
+    if(roach.direction.x < 0) {
+        angle = 180 + angle;
+    }
+    roach.display_object.rotation = angle;
 
 }
 
 function update_green_roach(roach, delta_time) {
     let green_roach_speed = 150;
 
-    if(roach.display_object.x > width || roach.display_object.x < 0) {
-        roach.display_object.x += width;
-        roach.display_object.x %= width;
-    }
-
-    if(roach.display_object.y > height || roach.display_object.y < 0) {
-        roach.display_object.y += height;
-        roach.display_object.y %= height; 
-    }
-    
     roach.alpha = Math.max(Math.random(), 0.2) * 2 * roach.alpha_sign;
 
     let omega_max = 3;
@@ -403,10 +429,69 @@ function update_green_roach(roach, delta_time) {
     roach.direction.x = Math.cos(roach.theta);
     roach.direction.y = Math.sin(roach.theta);
 
-    roach.display_object.rotation = roach.theta * 180 / Math.PI + 45;
+    roach.display_object.rotation = roach.theta * 180 / Math.PI;
 
     roach.display_object.x += delta_time * green_roach_speed * roach.direction.x;
     roach.display_object.y += delta_time * green_roach_speed * roach.direction.y;
+
+
+    if(roach.display_object.x > width || roach.display_object.x < 0) {
+        roach.display_object.x += width;
+        roach.display_object.x %= width;
+    }
+
+    if(roach.display_object.y > height || roach.display_object.y < 0) {
+        roach.display_object.y += height;
+        roach.display_object.y %= height; 
+    }
+}
+
+function update_red_roach(roach, delta_time) {
+    let red_roach_bounce_speed = 100;
+    let red_roach_run_speed = 250;
+    let turn_duration = 1.5;
+
+    if(roach.display_object.x > width || roach.display_object.x < 0) {
+        roach.direction.x *= -1;
+        roach.display_object.x = roach.display_object.x > width ? width : 0;
+        roach.turned_iterator = 0;
+    }
+
+    if(roach.display_object.y > height || roach.display_object.y < 0) {
+        roach.direction.y *= -1;
+        roach.display_object.y = roach.display_object.y > height ? height : 0;
+        roach.turned_iterator = 0;
+    }
+
+    
+    let dx = roach.display_object.x - player.x;
+    let dy = roach.display_object.y - player.y;
+
+    let length = Math.sqrt(dx * dx + dy * dy);
+
+    let speed = roach.turned_iterator < 0 ? red_roach_run_speed : red_roach_bounce_speed;
+
+    if(roach.turned_iterator >= 0) {
+        roach.turned_iterator += delta_time;
+        if(roach.turned_iterator >= turn_duration) {
+            roach.turned_iterator = -1;
+        }
+    }
+    else {
+        roach.direction.x = dx / length;
+        roach.direction.y = dy / length;
+        let angle = Math.atan(roach.direction.y/roach.direction.x) * 180 / Math.PI;
+        if(roach.direction.x < 0) {
+            angle = 180 + angle;
+        }
+        roach.display_object.rotation = angle;
+    }
+
+
+    roach.display_object.x += delta_time * speed * roach.direction.x;
+    roach.display_object.y += delta_time * speed * roach.direction.y;
+    
+    
 }
 
 function aim_attack(attack) {
@@ -451,6 +536,10 @@ function add_trail(x, y, dx, dy, color_str) {
             break;
         case "green":
             color = "#00ff00";
+            break;
+        case "red":
+            color = "#ff0000";
+            break;
     }
 
     shape.graphics.beginFill(color).drawRect(-5, -2, 10, 4);
@@ -507,10 +596,10 @@ function destroyRoach(roachID){
 
 function logServerConsoleToScreen(message){
     var div = document.createElement('div');
-    input = message.message;
+    input = JSON.stringify(message);
     div.className = 'mdl-list__item scrolling-list-element';
     div.innerHTML = '<span class="mdl-list__item-primary-content"/>' + "$> " +
-        input
+        input.
         + '</span>';
     document.getElementById('console-list').appendChild(div);
 }

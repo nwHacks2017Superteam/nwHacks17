@@ -26,10 +26,10 @@ function destroyRoach(roachID){
 
 function logServerConsoleToScreen(message){
     var div = document.createElement('div');
-    input = message.message;
+    input = JSON.stringify(message);
     div.className = 'mdl-list__item scrolling-list-element';
     div.innerHTML = '<span class="mdl-list__item-primary-content"/>' + "$> " +
-        input
+        input.
         + '</span>';
     document.getElementById('console-list').appendChild(div);
 }
