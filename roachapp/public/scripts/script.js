@@ -22,16 +22,20 @@ var attack_duration = 2;
 
 var spawns = [];
 var spawn_layer = new createjs.Container();
-var spawn_duration = 2;
+var spawn_duration = 1;
 var spawn_radius = 20;
 
 let available_ids = [];
 
-let image_root = "./images/";
+let white_roaches = [];
+
+
+let image_root = "images/";
 
 let wave_count = 0;
 let initial_wave = true;
 
+let top_bar_height = 40;
 let width = 0;
 let height = 0;
 
@@ -94,7 +98,10 @@ function init() {
     //initialize background 
 
     let background = new createjs.Shape();
-    background.graphics.beginFill("#4e1e10").drawRect(0, 0, width, height);
+    background.graphics.beginFill("#4e1e10").drawRect(0, top_bar_height, width, height);
+
+    let topbar = new createjs.Shape();
+    topbar.graphics.beginFill("Black").drawRect(0, 0, width, top_bar_height);
 
     score.scaleX = 30;
     score.scaleY = 30;
@@ -108,8 +115,9 @@ function init() {
     stage.addChild(trail_layer);
     stage.addChild(spawn_layer);
     stage.addChild(attack_layer);
-    stage.addChild(player);
     stage.addChild(roach_layer);
+    stage.addChild(topbar);
+    stage.addChild(player);
 
     stage.addEventListener("stagemousemove", update_mouse, false); 
 
@@ -131,12 +139,28 @@ function update(event) {
 
     if(roaches.length + spawns.length == 0 && available_ids.length != 0) {
         spawn_roach_wave(available_ids.splice(0, available_ids.length));
+        for (i in white_roaches) {
+            stage.removeChild(white_roaches[i]);
+        }
+        white_roaches = [];
         //spawn_roach_wave('abcde'.split(''));
         if(initial_wave) {
             initial_wave = false;
         }
         else {
             score.text = (++wave_count).toString();
+        }
+    }
+    else {
+        console.log(available_ids.length);
+        if(white_roaches.length < available_ids.length) {
+            for(i = white_roaches.length; i <= available_ids.length; i++) {
+                let wr = new createjs.Bitmap(image_root + "white_roach.png");
+                wr.x = i * 30;
+                wr.y = 10;
+                white_roaches.push(wr);
+                stage.addChild(wr);
+            }
         }
     }
 
@@ -257,7 +281,7 @@ function spawn_roach_wave(ids) {
 
     for (i = 0; i < ids.length; i++) {
         let x = margin + Math.random() * (width - margin * 2);
-        let y = margin + Math.random() * (height - margin * 2);
+        let y = margin + Math.random() * (height - top_bar_height - margin * 2);
         let roach;
         let color_rand = Math.random() * 3;
         //TODO: spawn different color roaches
@@ -416,7 +440,7 @@ function update_blue_roach(roach, delta_time) {
         roach.direction.x *= -1;
     }
 
-    if(roach.display_object.y > height || roach.display_object.y < 0) {
+    if(roach.display_object.y > height || roach.display_object.y < top_bar_height) {
         roach.direction.y *= -1;
     }
 
@@ -461,9 +485,11 @@ function update_green_roach(roach, delta_time) {
         roach.display_object.x %= width;
     }
 
-    if(roach.display_object.y > height || roach.display_object.y < 0) {
-        roach.display_object.y += height;
-        roach.display_object.y %= height; 
+    if(roach.display_object.y > height) {
+        roach.display_object.y -= (height - top_bar_height);
+    }
+    if(roach.display_object.y < top_bar_height) {
+        roach.display_object.y += (height - top_bar_height);
     }
 }
 
@@ -478,9 +504,9 @@ function update_red_roach(roach, delta_time) {
         roach.turned_iterator = 0;
     }
 
-    if(roach.display_object.y > height || roach.display_object.y < 0) {
+    if(roach.display_object.y > height || roach.display_object.y < top_bar_height) {
         roach.direction.y *= -1;
-        roach.display_object.y = roach.display_object.y > height ? height : 0;
+        roach.display_object.y = roach.display_object.y > height ? height : top_bar_height;
         roach.turned_iterator = 0;
     }
 
