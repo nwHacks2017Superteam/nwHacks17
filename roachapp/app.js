@@ -115,7 +115,11 @@ io.on('connection', function(socket) {
     socket.on('disconnect', function() {
         childproc.kill();
         for (i in sessions[socket]['pids']) {
-            process.kill(sessions[socket]['pids'][i], 'SIGKILL');
+            try {
+                process.kill(sessions[socket]['pids'][i], 'SIGKILL');
+            } catch (e) {
+                console.log("Could not kill pid " + sessions[socket]['pids'][i]);
+            }
         }
     });
 });
