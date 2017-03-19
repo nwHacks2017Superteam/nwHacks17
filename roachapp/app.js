@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var child_process = require('child_process');
+var request = require('request');
 
 var index = require('./routes/index');
 
@@ -63,13 +64,38 @@ io.on('connection', function(socket) {
 
     childproc.stdout.on('data', (data) => {
         console.log(`${data}`);
-        if (!(`${parseInt(data)}` == "NaN")) {
-            sessions[socket]['pids'].push(`${parseInt(data)}`);
-            console.log(JSON.stringify(sessions[socket]['pids']));
+
+        var fields = `${data}`.trim().split(',');
+
+        if (fields.length == 3) {
+            sessions[socket]['special_pid'] = fields[0];
+            sessions[socket]['pg_port'] = fields[1];
+            sessions[socket]['http_port'] = fields[2];
+            checkAPI(sessions[socket]['http_port']);
+        } else if (fields.length == 1) {
+
+            if (!(`${parseInt(data)}` == "NaN")) {
+                sessions[socket]['pids'].push(`${parseInt(data)}`);
+                console.log(JSON.stringify(sessions[socket]['pids']));
+            }
         }
     });
 
-    io.emit('give_session', { 'id': uuid });
+    function checkAPI(port) {
+        console.log(`localhost:${port}/_admin/v1/liveness`);
+        request(`http://localhost:${port}/_admin/v1/liveness`, function (error, response, body) {
+            var JSONbody = JSON.parse(body);
+            //console.log(JSON.stringify(JSONbody));
+
+            var draining = JSONbody['livenesses'].filter(instance => instance['draining']).length;
+            io.emit('liveness_update', {'body': body, 'draining': draining});
+            
+            setTimeout(function() { checkAPI(port) }, 1000);
+        });
+    }
+
+
+    io.emit('give_session', { 'id': uuid, 'roach_ids': sessions[socket]['pids'] });
 
     socket.on('kill_cockroach', function(msg) {
         process.kill(msg['pid'], 'SIGKILL');
