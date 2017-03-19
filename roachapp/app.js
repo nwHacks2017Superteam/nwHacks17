@@ -81,6 +81,8 @@ io.on('connection', function(socket) {
         }
     });
 
+    var checkAPITimeout = null;
+
     function checkAPI(port) {
         //console.log(`localhost:${port}/_admin/v1/liveness`);
         request(`http://localhost:${port}/_admin/v1/liveness`, function (error, response, body) {
@@ -94,13 +96,15 @@ io.on('connection', function(socket) {
                 var new_instance_proc = child_process.spawn('bash-scripts/start-instance.sh', ['-p', sessions[socket]['pg_port']]);
 
                 new_instance_proc.stdout.on('data', function(data) {
-                    io.emit('new_roach', {'roach_id' : `${data}`.trim()});
+                    var newPid = `${data}`.trim()
+                    sessions[socket]['pids'].push(newPid);
+                    console.log(JSON.stringify(sessions[socket]['pids']));
+                    io.emit('new_roach', {'roach_id' : newPid});
                 });
             }
 
             io.emit('liveness_update', {'body': body, 'draining': draining});
-            
-            setTimeout(function() { checkAPI(port) }, 1000);
+            checkAPITimeout = setTimeout(function() { checkAPI(port) }, 1000);
         });
     }
 
@@ -114,9 +118,19 @@ io.on('connection', function(socket) {
 
     socket.on('disconnect', function() {
         childproc.kill();
-        for (i in sessions[socket]['pids']) {
-            process.kill(sessions[socket]['pids'][i], 'SIGKILL');
+
+        if (checkAPITimeout != null) {
+            clearTimeout(checkAPITimeout);
         }
+
+        for (i in sessions[socket]['pids']) {
+            try {
+                process.kill(sessions[socket]['pids'][i], 'SIGKILL');
+            } catch (e) {
+                console.log("Could not kill pid " + sessions[socket]['pids'][i]);
+            }
+        }
+        process.kill(sessions[socket]['special_pid'], 'SIGKILL');
     });
 });
 
