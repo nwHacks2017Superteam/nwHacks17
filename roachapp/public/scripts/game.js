@@ -316,7 +316,7 @@ function kill_roach(roach) {
 }
 
 function construct_blue_roach(id) {
-    let roach_display = new createjs.Bitmap("../Projects/nwHacks17/roachapp/public/images/blue_roach.png");
+    let roach_display = new createjs.Bitmap("./public/images/blue_roach.png");
     roach_display.regX = 15;
     roach_display.regY = 15;
     return {
@@ -331,7 +331,7 @@ function construct_blue_roach(id) {
 }
 
 function construct_green_roach(id) {
-    let roach_display = new createjs.Bitmap("../Projects/nwHacks17/roachapp/public/images/green_roach.png");
+    let roach_display = new createjs.Bitmap("./public/images/green_roach.png");
     roach_display.regX = 15;
     roach_display.regY = 15;
     let angle = Math.random() * 2 * Math.PI;
@@ -352,7 +352,7 @@ function construct_green_roach(id) {
 }
 
 function construct_red_roach(id) {
-    let roach_display = new createjs.Bitmap("../Projects/nwHacks17/roachapp/public/images/red_roach.png");
+    let roach_display = new createjs.Bitmap(".public/images/red_roach.png");
     roach_display.regX = 15;
     roach_display.regY = 15;
     return {
