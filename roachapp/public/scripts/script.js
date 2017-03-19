@@ -759,7 +759,7 @@ function setiframecontent(){
     console.log(admin_url);
     var canvas = document.getElementById("admin-window");
     canvas.setAttribute('src',admin_url);
-    canvas.contentWindow.location.reload();
+    //canvas.contentWindow.location.reload();
 }
 
 setiframecontent();
