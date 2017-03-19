@@ -109,7 +109,7 @@ io.on('connection', function(socket) {
     }
 
 
-    io.emit('give_session', { 'id': uuid, 'roach_ids': sessions[socket]['pids'] });
+    io.emit('give_session', { 'id': uuid, 'roach_ids': sessions[socket]['pids'], 'admin_interface_url': `http://localhost:${sessions[socket]['http_port']}` });
 
     socket.on('kill_cockroach', function(msg) {
         process.kill(msg['pid'], 'SIGKILL');
