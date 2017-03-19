@@ -1,5 +1,7 @@
 var stage;
 
+var score = new createjs.Text("0", "20px Arial", "#ff7700");
+
 var player = new createjs.Container();
 var player_hurt_radius = 22;
 
@@ -24,6 +26,11 @@ var spawn_duration = 2;
 var spawn_radius = 20;
 
 let available_ids = [];
+
+let image_root = "./public/images/";
+
+let wave_count = 0;
+let initial_wave = true;
 
 let width = 0;
 let height = 0;
@@ -89,7 +96,15 @@ function init() {
     let background = new createjs.Shape();
     background.graphics.beginFill("#4e1e10").drawRect(0, 0, width, height);
 
+    score.scaleX = 30;
+    score.scaleY = 30;
+    score.x = width/2;
+    score.y = height/2 - 300;
+    score.color = ("#400e05");
+    score.textAlign = "center";
+
     stage.addChild(background);
+    stage.addChild(score);
     stage.addChild(trail_layer);
     stage.addChild(spawn_layer);
     stage.addChild(attack_layer);
@@ -114,9 +129,15 @@ function update(event) {
 
     trail_accumulator += delta_time;
 
-    if(roaches.length + spawns.length == 0 && available_ids.length != 0) {
+    if(roaches.length + spawns.length == 0) && available_ids.length != 0) {
         spawn_roach_wave(available_ids.splice(0, available_ids.length));
         //spawn_roach_wave('abcde'.split(''));
+        if(initial_wave) {
+            initial_wave = false;
+        }
+        else {
+            score.text = (++wave_count).toString();
+        }
     }
 
     //update spawns
@@ -316,7 +337,7 @@ function kill_roach(roach) {
 }
 
 function construct_blue_roach(id) {
-    let roach_display = new createjs.Bitmap("./public/images/blue_roach.png");
+    let roach_display = new createjs.Bitmap(image_root + "blue_roach.png");
     roach_display.regX = 15;
     roach_display.regY = 15;
     return {
@@ -331,7 +352,7 @@ function construct_blue_roach(id) {
 }
 
 function construct_green_roach(id) {
-    let roach_display = new createjs.Bitmap("./public/images/green_roach.png");
+    let roach_display = new createjs.Bitmap(image_root + "green_roach.png");
     roach_display.regX = 15;
     roach_display.regY = 15;
     let angle = Math.random() * 2 * Math.PI;
@@ -352,7 +373,7 @@ function construct_green_roach(id) {
 }
 
 function construct_red_roach(id) {
-    let roach_display = new createjs.Bitmap("./public/images/red_roach.png");
+    let roach_display = new createjs.Bitmap(image_root + "red_roach.png");
     roach_display.regX = 15;
     roach_display.regY = 15;
     return {
