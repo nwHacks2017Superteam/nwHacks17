@@ -22,5 +22,9 @@ cd /tmp
 nodeNum=$RANDOM
 cockroach start --background --port=0 --http-port=0 --store=node$nodeNum --join=localhost:$masterInstancePort > /dev/null 
 
-echo $(ps -fC cockroach | grep "node$nodeNum" | awk '{print $2}')
+if [[ "$OSTYPE" == 'linux-gnu' ]]; then
+    echo $(ps -fC "cockroach" | grep "node$nodeNum" | awk '{print $2}')
+else
+    echo $(ps aux -O started | grep "cockroach" | grep "node$nodeNum" | awk '{print $2}')
+fi
 
