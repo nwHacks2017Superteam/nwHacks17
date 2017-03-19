@@ -14,7 +14,10 @@ const now = new Date();
 const date = `${now.getMonth() + 1}/${now.getDate()}/${now.getFullYear()}`;
 
 gulp.task('js', function() {
-    gulp.src('public/scripts/*.js')
+    gulp.src('public/scripts/src/*.js')
+        .pipe(concat('script.js'))
+        .pipe(gulp.dest('public/scripts/'));
+    gulp.src('public/scripts/dist/*.js')
         .pipe(concat('script.js'))
         .pipe(gulp.dest('public/scripts/'));
 });
@@ -27,7 +30,11 @@ gulp.task('cssmin', function() {
 });
 
 gulp.task('sass', function() {
-    gulp.src('public/styles/*.scss')
+    gulp.src('public/styles/src/*.scss')
+        .pipe(sass())
+        .pipe(concat('style.css'))
+        .pipe(gulp.dest('public/styles/'));
+    gulp.src('public/styles/dist/*.scss')
         .pipe(sass())
         .pipe(concat('style.css'))
         .pipe(gulp.dest('public/styles/'));
@@ -42,7 +49,8 @@ gulp.task('uglify', function() {
 });
 
 gulp.task('watch', function() {
-    gulp.watch('public/styles/*.scss', ['sass']);
+    gulp.watch('public/styles/src/*.scss', ['sass']);
+    gulp.watch('public/styles/dist/*.scss', ['sass']);
     gulp.watch('public/scripts/*.js', ['js']);
 });
 
