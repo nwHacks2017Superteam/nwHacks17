@@ -129,7 +129,7 @@ function update(event) {
 
     trail_accumulator += delta_time;
 
-    if(roaches.length + spawns.length == 0) && available_ids.length != 0) {
+    if(roaches.length + spawns.length == 0 && available_ids.length != 0) {
         spawn_roach_wave(available_ids.splice(0, available_ids.length));
         //spawn_roach_wave('abcde'.split(''));
         if(initial_wave) {
