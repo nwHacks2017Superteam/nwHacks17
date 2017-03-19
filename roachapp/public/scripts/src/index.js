@@ -72,6 +72,7 @@ function onClientLoad(){
         //console.log(JSON.stringify(msg));
         session_id = msg.id;
         admin_url = msg.admin_interface_url;
+        setiframecontent();
         roachIDs = msg.roach_ids;
 
         roachIDs.forEach(function(id){
@@ -140,10 +141,10 @@ window.onresize = function(event) {
 function setiframecontent(){
     var canvas = document.getElementById("admin-window");
     canvas.src = admin_url;
+    canvas.contentWindow.location.reload();
 }
 
 setiframecontent();
-
 setGameWindowDimensions();
 
 
