@@ -13,15 +13,8 @@
     <script src="/socket.io/socket.io.js"></script>
 
 
-    <script src="scripts/script.js">console.log("yo");</script>
-    <script>
-        //Start the client-server connection.
-        onClientLoad();
-    </script>
-
     <script src="https://code.createjs.com/createjs-2015.11.26.min.js"></script>
     <script src="scripts/game.js"></script>
-
 
 
 </head>
@@ -90,13 +83,9 @@
                                 <div class="mdl-card__title">
                                     <h2 class="mdl-card__title-text">Debug Window</h2>
                                 </div>
-                                <div class="mdl-card__supporting-text">
-                                    Debug Menu.
-                                </div>
-                                <div class="mdl-card__menu">
-                                    <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
-                                        <i class="material-icons">share</i>
-                                    </button>
+                                <div class="mdl-card__supporting-text debug-area">
+                                    Debug.
+
                                 </div>
                             </div>
 
@@ -104,24 +93,20 @@
 
 
                         <!-- Game window card & debug -->
-                        <div class="mdl-cell--10-col">
 
                             <!-- game window -->
 
-                            <div class="mdl-cell fill-width">
+                        <div class="mdl-cell fill-width">
 
-                                <div class="demo-card-wide mdl-card mdl-shadow--2dp fill-width game-window m-auto debug-menu">
-                                    <div class="mdl-card__media">
-                                        <canvas id="gameCanvas" width=1000 height=700 class="fill-height" >
-
-                                            <!-- Alex here is your canvas space -->
-
-                                        </canvas>
-                                    </div>
+                            <div class="demo-card-wide mdl-card mdl-shadow--2dp fill-width game-window m-auto debug-menu">
+                                <div id="gameCanvasContainer" class="mdl-card__media fill-width">
+                                    <canvas id="gameCanvas"  class="fill-height fill-width" >
+                                        <!-- Alex here is your canvas space -->
+                                    </canvas>
                                 </div>
                             </div>
-
                         </div>
+
 
                     </div>
 
@@ -131,3 +116,11 @@
         </div>
     </div>
 </body>
+
+<footer>
+    <script src="scripts/script.js">console.log("yo");</script>
+    <script>
+        //Start the client-server connection.
+        onClientLoad();
+    </script>
+</footer>

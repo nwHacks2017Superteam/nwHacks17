@@ -58,12 +58,18 @@
 .debug-menu {
   min-height: inherit !important;
   height: 20vh !important;
+
+  .debug-area{
+    height:100%;
+    width:100%;
+    background-color: rgba(115,115,115,0.35);
+  }
+
 }
 
 .game-window{
   min-height: inherit !important;
   height: 70vh !important;
-  width: 100vh !important;
 
 }
 
