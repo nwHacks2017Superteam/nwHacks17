@@ -13,14 +13,6 @@
     <script src="/socket.io/socket.io.js"></script>
 
 
-    <script src="scripts/script.js">console.log("yo");</script>
-
-
-    <script>
-        //Start the client-server connection.
-        onClientLoad();
-    </script>
-
     <script src="https://code.createjs.com/createjs-2015.11.26.min.js"></script>
     <script src="scripts/game.js"></script>
 
@@ -32,70 +24,45 @@
 
         <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
 
-    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+            <!--
+            <header class="mdl-layout__header mdl-layout__header--scroll">
+                <div class="mdl-layout__header-row">
 
-        <!--
-        <header class="mdl-layout__header mdl-layout__header--scroll">
-            <div class="mdl-layout__header-row">
+                    <span class="mdl-layout-title">Food planning app.</span>
 
-                <span class="mdl-layout-title">Food planning app.</span>
+                    <div class="mdl-layout-spacer"></div>
 
-                <div class="mdl-layout-spacer"></div>
-
-            </div>
-        </header>
-
-        <div class="mdl-layout__drawer">
-            <span class="mdl-layout__title">Material Design Lite</span>
-            <nav class="mdl-navigation">
-                <a class="mdl-navigation__link" href="#">Hello</a>
-                <a class="mdl-navigation__link" href="#">World.</a>
-                <a class="mdl-navigation__link" href="#">How</a>
-                <a class="mdl-navigation__link" href="#">Are</a>
-                <a class="mdl-navigation__link" href="#">You?</a>
-            </nav>
-        </div>
-        -->
-
-
-        <main class="mdl-layout__content">
-
-            <div class="mdl-grid">
-
-
-                <!-- Debug card -->
-                <div class="mdl-cell mdl-cell--2-col">
-                    <div class="demo-card-wide mdl-card mdl-shadow--2dp fill-width side-menu m-auto">
-                        <div class="mdl-card__title">
-                            <h2 class="mdl-card__title-text">Debug Window</h2>
-                        </div>
-                        <div class="mdl-card__supporting-text">
-                            <ul id='console-list' class="demo-list-control mdl-list">
-
-                            </ul>
-                        </div>
-                        <div class="mdl-card__menu">
-                            <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
-                                <i class="material-icons">share</i>
-                            </button>
-                        </div>
-                    </div>
                 </div>
+            </header>
+
+            <div class="mdl-layout__drawer">
+                <span class="mdl-layout__title">Material Design Lite</span>
+                <nav class="mdl-navigation">
+                    <a class="mdl-navigation__link" href="#">Hello</a>
+                    <a class="mdl-navigation__link" href="#">World.</a>
+                    <a class="mdl-navigation__link" href="#">How</a>
+                    <a class="mdl-navigation__link" href="#">Are</a>
+                    <a class="mdl-navigation__link" href="#">You?</a>
+                </nav>
+            </div>
+            -->
 
 
-                <!-- Game window card & debug -->
-                <div class="mdl-cell--10-col">
+            <div class="mdl-layout__content">
 
-                    <!-- debug menu -->
+                <div class="mdl-grid">
 
-                    <div class="mdl-cell fill-width">
 
-                        <div class="demo-card-wide mdl-card mdl-shadow--2dp fill-width m-auto debug-menu">
+                    <!-- Debug card -->
+                    <div class="mdl-cell mdl-cell--2-col">
+                        <div class="demo-card-wide mdl-card mdl-shadow--2dp fill-width side-menu m-auto">
                             <div class="mdl-card__title">
-                                <h2 class="mdl-card__title-text">Debug Window</h2>
+                                <h2 class="mdl-card__title-text">Console</h2>
                             </div>
-                            <div class="mdl-card__supporting-text">
-                                Debug Menu.
+                            <div class="mdl-card__supporting-text scrolling-list-wrapper">
+                                <ul id='console-list' class="scrolling-list demo-list-control mdl-list">
+
+                                </ul>
                             </div>
                             <div class="mdl-card__menu">
                                 <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
@@ -103,7 +70,6 @@
                                 </button>
                             </div>
                         </div>
-
                     </div>
 
 
@@ -116,7 +82,7 @@
 
                             <div class="demo-card-wide mdl-card mdl-shadow--2dp fill-width m-auto debug-menu">
                                 <div class="mdl-card__title">
-                                    <h2 class="mdl-card__title-text">Welcome</h2>
+                                    <h2 class="mdl-card__title-text">Debug Window</h2>
                                 </div>
                                 <div class="mdl-card__supporting-text">
                                     Debug Menu.
@@ -130,30 +96,35 @@
 
                         </div>
 
-                        <!-- game window -->
 
-                        <div class="mdl-cell fill-width">
+                        <!-- Game window card & debug -->
+                        <div class="mdl-cell--10-col">
 
-                            <div class="demo-card-wide mdl-card mdl-shadow--2dp fill-width game-window m-auto debug-menu">
-                                <div class="mdl-card__media">
-                                    <canvas id="gameCanvas" width=1000 height=700 class="fill-height" >
+                            <!-- game window -->
 
-                                        <!-- Alex here is your canvas space -->
+                            <div class="mdl-cell fill-width">
 
-                                    </canvas>
+                                <div class="demo-card-wide mdl-card mdl-shadow--2dp fill-width game-window m-auto debug-menu">
+                                    <div class="mdl-card__media">
+                                        <canvas id="gameCanvas" width=1000 height=700 class="fill-height" >
+
+                                            <!-- Alex here is your canvas space -->
+
+                                        </canvas>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
+                        </div>
 
                     </div>
 
                 </div>
-            </main>
 
+            </div>
         </div>
     </div>
-</div>
+</body>
 
 
 <footer>
@@ -163,6 +134,7 @@
     <script>
         //Start the client-server connection.
         onClientLoad();
+        requestLog('yo');
     </script>
 
 </footer>
