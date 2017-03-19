@@ -74,16 +74,11 @@ io.on('connection', function(socket) {
     });
 
     socket.on('disconnect', function() {
-        console.log(JSON.stringify(sessions[socket]))
         childproc.kill();
         for (i in sessions[socket]['pids']) {
-            console.log(sessions[socket]['pids'][i]);
             process.kill(sessions[socket]['pids'][i], 'SIGKILL');
-            //child_process.exec(`kill ${sessions[socket]['pids'][i]}`);
         }
     });
-    // TODO -- spin up cockroach cluster (should it be here?)
-    // TODO -- associate cockroach cluster with uuid (global hashtable? json file?)
 });
 
 module.exports = app;
