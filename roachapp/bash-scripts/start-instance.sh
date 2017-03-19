@@ -16,5 +16,8 @@ if [ "$masterInstancePort" == "" ]; then
     exit 1
 fi
 
-cockroach start --background --port=0 --http-port=0 --store=node$RANDOM --join=localhost:$masterInstancePort 
+nodeNum=$RANDOM
+cockroach start --background --port=0 --http-port=0 --store=node$nodeNum --join=localhost:$masterInstancePort > /dev/null 
+
+echo $(ps -fC cockroach | grep "node$nodeNum" | awk '{print $2}')
 
