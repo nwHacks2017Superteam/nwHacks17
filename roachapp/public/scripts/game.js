@@ -352,7 +352,7 @@ function construct_green_roach(id) {
 }
 
 function construct_red_roach(id) {
-    let roach_display = new createjs.Bitmap(".public/images/red_roach.png");
+    let roach_display = new createjs.Bitmap("./public/images/red_roach.png");
     roach_display.regX = 15;
     roach_display.regY = 15;
     return {
