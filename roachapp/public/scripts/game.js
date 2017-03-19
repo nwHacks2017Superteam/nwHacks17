@@ -1,12 +1,18 @@
 var stage;
 
 var player = new createjs.Container();
+var player_hurt_radius = 25;
 
 var roaches = [];
 var roach_trails = [];
+
 var trail_accumulator = 0;
 var trail_interval = 0.2;
-var trail_duration = 5;
+var trail_duration = 3;
+
+var attacks = [];
+var attack_radius = 80;
+
 
 let width, height;
 
@@ -29,6 +35,18 @@ function init() {
     let circle4 = new createjs.Shape();
     circle4.graphics.beginFill("Green").drawCircle(0, 0, 6);
 
+    //REMOVE THESE IN FINAL
+    let hit_circle = new createjs.Shape();
+    hit_circle.graphics.beginFill("White").drawCircle(0, 0, attack_radius);
+    hit_circle.alpha = 0.2;
+
+    let hurt_circle = new createjs.Shape();
+    hurt_circle.graphics.beginFill("Red").drawCircle(0, 0, player_hurt_radius);
+    hurt_circle.alpha = 0.2;
+
+
+    player.addChild(hit_circle);
+    player.addChild(hurt_circle);
     player.addChild(circle1);
     player.addChild(circle2);
     player.addChild(circle3);
@@ -65,6 +83,7 @@ function update(event) {
 
     trail_accumulator += delta_time;
 
+
     //update roaches
     for (i in roaches) {
         update_roach(roaches[i], delta_time);
@@ -78,6 +97,17 @@ function update(event) {
                 roaches[i].color
             );
         }
+        //check for player death
+        if (within_circle(
+            roaches[i].display_object.x,
+            roaches[i].display_object.y,
+            player.x,
+            player.y,
+            player_hurt_radius
+        )) {
+            //kill player
+            console.log("player hit!");
+        }
     }
 
     //update roach trails
@@ -88,6 +118,10 @@ function update(event) {
             roach_trails.splice(i,1);
         }
     }
+
+    //update attacks
+
+
 
     stage.update();
 }
@@ -181,6 +215,15 @@ function add_trail(x, y, dx, dy, color_str) {
         display_object: shape,
         lifetime: 0
     });
+}
+
+function within_circle(x, y, circle_x, circle_y, radius) {
+    let dx = circle_x - x;
+    let dx2 = dx * dx;
+    let dy = circle_y - y;
+    let dy2 = dy - dy;
+
+    return radius * radius >= dx2 + dy2;
 }
 
 
