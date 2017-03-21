@@ -204,10 +204,10 @@ function update(event) {
             player_hurt_radius
         )) {
             //kill player
-            console.log("player hit!");
-            game_over=true;
+            // console.log("player hit!");
+            // game_over=true;
 
-            end_game();
+            // end_game();
 
         }
         if(within_circle(
