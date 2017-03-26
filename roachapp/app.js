@@ -56,36 +56,41 @@ io.on('connection', function(socket) {
     if (!sessions[socket]) {
         sessions[socket] = {
             'uuid': uuid,
-            'pids': [] // populate with pids
+            'pids': [],
+            'dead':  0,
+            'spawned': 0,
         };
     }
 
-    var childproc = child_process.spawn('bash-scripts/start-cluster.sh', ['-n', '10', '-u', uuid]);
+    var childproc = child_process.spawn('bash-scripts/start-cluster.sh', ['-n', '5', '-u', uuid]);
 
     childproc.stdout.on('data', (data) => {
         console.log(`${data}`);
 
         var fields = `${data}`.trim().split(',');
 
+
         if (fields.length == 3) {
             sessions[socket]['special_pid'] = fields[0];
             sessions[socket]['pg_port'] = fields[1];
             sessions[socket]['http_port'] = fields[2];
-            checkAPI(sessions[socket]['http_port']);
+            //checkAPI(sessions[socket]['http_port']);
             //console.log(`http://localhost:${sessions[socket]['http_port']}/#/cluster/nodes`);
             io.emit('give_session', { 'id': uuid, 'roach_ids': sessions[socket]['pids'], 'admin_interface_url': `http://localhost:${sessions[socket]['http_port']}/#/cluster/nodes` });
         } else if (fields.length == 1) {
 
             if (!(`${parseInt(data)}` == "NaN")) {
                 sessions[socket]['pids'].push(`${parseInt(data)}`);
+                io.emit('new_roach', {'roach_id' : `${parseInt(data)}`});
+                sessions[socket]['spawned'] += 1;
                 console.log(JSON.stringify(sessions[socket]['pids']));
             }
         }
     });
 
-    var checkAPITimeout = null;
+    //var checkAPITimeout = null;
 
-    function checkAPI(port) {
+    /*function checkAPI(port) {
         //console.log(`localhost:${port}/_admin/v1/liveness`);
         request(`http://localhost:${port}/_admin/v1/liveness`, function (error, response, body) {
             var JSONbody = JSON.parse(body);
@@ -101,28 +106,48 @@ io.on('connection', function(socket) {
                     var newPid = `${data}`.trim()
                     sessions[socket]['pids'].push(newPid);
                     console.log(JSON.stringify(sessions[socket]['pids']));
+                    sessions[socket]['spawned'] += 1;
                     io.emit('new_roach', {'roach_id' : newPid});
                 });
             }
 
+<<<<<<< HEAD
             io.emit('liveness_update', {'draining': draining});
             checkAPITimeout = setTimeout(function() { checkAPI(port) }, 2000);
+=======
+            io.emit('liveness_update', {'body': body, 'draining': draining});
+            checkAPITimeout = setTimeout(function() { checkAPI(port) }, parseInt(2000 * (sessions[socket].spawned - sessions[socket].dead)) );
+>>>>>>> stable3
         });
-    }
+    }*/
 
 
 
     socket.on('kill_cockroach', function(msg) {
-        process.kill(msg['pid'], 'SIGKILL');
-        // TODO -- add some security checking to see if the process to be killed belongs to your session
+        try {
+            process.kill(msg['pid'], 'SIGKILL');
+            sessions[socket]['dead'] += 1;
+            if (sessions[socket].dead / sessions[socket].spawned >= 0.1) {
+                //console.log('no draining!');
+                var new_instance_proc = child_process.spawn('bash-scripts/start-instance.sh', ['-p', sessions[socket]['pg_port']]);
+
+                new_instance_proc.stdout.on('data', function(data) {
+                    var newPid = `${data}`.trim()
+                    sessions[socket]['pids'].push(newPid);
+                    console.log(JSON.stringify(sessions[socket]['pids']));
+                    sessions[socket]['spawned'] += 1;
+                    io.emit('new_roach', {'roach_id' : newPid});
+                });
+            }
+        } catch(e) {}
     });
 
     socket.on('disconnect', function() {
         childproc.kill();
 
-        if (checkAPITimeout != null) {
+        /*if (checkAPITimeout != null) {
             clearTimeout(checkAPITimeout);
-        }
+        }*/
 
         for (i in sessions[socket]['pids']) {
             try {
@@ -132,6 +157,7 @@ io.on('connection', function(socket) {
             }
         }
         process.kill(sessions[socket]['special_pid'], 'SIGKILL');
+        sessions[socket] = undefined;
     });
 });
 
